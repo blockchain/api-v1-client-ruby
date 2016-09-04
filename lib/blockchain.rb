@@ -8,6 +8,6 @@ require "blockchain/statistics"
 require "blockchain/wallet"
 
 module Blockchain
-	module V2
-	end
+  module V2
+  end
 end

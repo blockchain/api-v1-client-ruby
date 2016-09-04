@@ -64,9 +64,9 @@ module Blockchain
       addresses = []
       json_response['addresses'].each do |a|
         addr = WalletAddress.new(a['balance'],
-                      a['address'],
-                      a['label'],
-                      a['total_received'])
+                                 a['address'],
+                                 a['label'],
+                                 a['total_received'])
         addresses.push(addr)
       end
       return addresses
@@ -79,9 +79,9 @@ module Blockchain
       response = Blockchain::call_api("merchant/#{@identifier}/address_balance", method: 'get', data: params, base_url: @url)
       json_response = parse_json(response)
       return WalletAddress.new(json_response['balance'],
-                  json_response['address'],
-                  nil,
-                  json_response['total_received'])
+                               json_response['address'],
+                               nil,
+                               json_response['total_received'])
     end
     
     def new_address(label = nil)
@@ -90,9 +90,9 @@ module Blockchain
       response = Blockchain::call_api("merchant/#{@identifier}/new_address", method: 'post', data: params, base_url: @url)
       json_response = parse_json(response)
       return WalletAddress.new(0,
-                  json_response['address'],
-                  json_response['label'],
-                  0)
+                               json_response['address'],
+                               json_response['label'],
+                               0)
     end
     
     def archive_address(address)
