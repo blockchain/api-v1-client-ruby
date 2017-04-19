@@ -75,8 +75,18 @@ module Blockchain
         params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
         if !api_code.nil? then params['api_code'] = api_code end
         resource = 'multiaddr'
-        response = Blockchain::call_api(resource, method: 'get', data: paras)
-        return MultiAddress.news(JSON.parse(respones))
+        response = Blockchain::call_api(resource, method: 'get', data: params)
+        return MultiAddress.new(JSON.parse(respones))
+    end
+
+    def self.get_xpub(xpub, api_code = nil,
+                        limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
+                        filter = FilterType::REMOVE_UNSPENDABLE)
+        params = { 'active' => xpub, 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+        if !api_code.nil? then params['api_code'] = api_code end
+        resource = 'multiaddr'
+        response = Blockchain::call_api(resource, method: 'get', data: params)
+        return Xpub.new(JSON.parse(respones))
     end
 
 	def self.get_unspent_outputs(address_array, api_code = nil,
@@ -194,6 +204,18 @@ module Blockchain
         def initialize(ma)
             @addresses = ma['addresses'].map{ |a| Address.new(a) }
             @transactions = ma['txs'].map{ |tx| Transaction.net(tx) }
+        end
+    end
+
+    class Xpub < Address
+        attr_reader :change_index
+        attr_reader :account_index
+        attr_reader :gap_limit
+
+        def initialize(x)
+            @change_index = x['change_index']
+            @account_index = x['account_index']
+            @gap_limit = x['gap_limit']
         end
     end
 
