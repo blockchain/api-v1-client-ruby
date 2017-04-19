@@ -3,19 +3,41 @@ require_relative 'util'
 
 module Blockchain
 
-	def self.get_block(block_id, api_code = nil)
-		params = api_code.nil? ? { } : { 'api_code' => api_code }
-		resource = 'rawblock/' + block_id
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return Block.new(JSON.parse(response))
+    MAX_TRANSACTIONS_PER_REQUEST = 50
+
+    # Deprecated. Please use get_block_by_hash whenever possible.
+	def self.get_block_by_index(block_index, api_code = nil)
+        warn "[DEPRECATION] `get_block_by_index` is deprecated. Please use `get_block_by_hash` whenever possible."
+		return self.get_block(block_index, api_code)
 	end
 
-	def self.get_tx(tx_id, api_code = nil)
-		params = api_code.nil? ? { } : { 'api_code' => api_code }
-		resource = 'rawtx/' + tx_id
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return Transaction.new(JSON.parse(response))
-	end
+    def self.get_block_by_hash(block_hash, api_code = nil)
+        return self.get_block(block_hash, api_code)
+    end
+
+    def self.get_block(hash_or_index, api_code)
+        params = api_code.nil? ? { } : { 'api_code' => api_code }
+        resource = 'rawblock/' + block_index
+        response = Blockchain::call_api(resource, method: 'get', data: params)
+        return Block.new(JSON.parse(response))
+    end
+
+    # Deprecated. Please use get_tx_by_hash whenever possible.
+    def self.get_tx_by_index(tx_index, api_code = nil)
+        warn "[DEPRECATION] `get_tx_by_index` is deprecated. Please use `get_tx_by_hash` whenever possible."
+        return self.get_tx(tx_index, api_code)
+    end
+
+    def self.get_tx_by_hash(tx_hash, api_code = nil)
+        return self.get_tx(tx_hash, api_code)
+    end
+
+    def self.get_tx(hash_or_index, api_code = nil)
+        params = api_code.nil? ? { } : { 'api_code' => api_code }
+        resource = 'rawtx/' + hash_or_index
+        response = Blockchain::call_api(resource, method: 'get', data: params)
+        return Transaction.new(JSON.parse(response))
+    end
 
 	def self.get_block_height(height, api_code = nil)
 		params = { 'format' => 'json' }
@@ -25,12 +47,37 @@ module Blockchain
 		return JSON.parse(response)['blocks'].map{ |b| Block.new(b) }
 	end
 
-	def self.get_address(address, api_code = nil)
-		params = api_code.nil? ? { } : { 'api_code' => api_code }
-		resource = 'rawaddr/' + address
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return Address.new(JSON.parse(response))
-	end
+    def self.get_address_by_hash160(address, api_code = nil,
+                                    limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
+                                    filter = FilterType::REMOVE_UNSPENDABLE)
+        return self.get_address(address, api_code, limit, offset, filter)
+    end
+
+    def self.get_address_by_base58(address, api_code = nil,
+                                    limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
+                                    filter = FilterType::REMOVE_UNSPENDABLE)
+        return self.get_address(address, api_code, limit, offset, filter)
+    end
+
+    def self.get_address(address, api_code = nil,
+                        limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
+                        filter = FilterType::REMOVE_UNSPENDABLE)
+        params = { 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+        if !api_code.nil? then params['api_code'] = api_code end
+        resource = 'rawaddr/' + address
+        response = Blockchain::call_api(resource, method: 'get', data: params)
+        return Address.new(JSON.parse(response))
+    end
+
+    def self.get_multi_address(address_array, api_code = nil,
+                                limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
+                                filter = FilterType::REMOVE_UNSPENDABLE)
+        params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+        if !api_code.nil? then params['api_code'] = api_code end
+        resource = 'multiaddr'
+        response = Blockchain::call_api(resource, method: 'get', data: paras)
+        return MultiAddress.news(JSON.parse(respones))
+    end
 
 	def self.get_unspent_outputs(address, api_code = nil)
 		params = { 'active' => address }
@@ -60,7 +107,7 @@ module Blockchain
 		response = Blockchain::call_api(resource, method: 'get', data: params)
 		return JSON.parse(response)['blocks'].map{ |b| SimpleBlock.new(b) }
 	end
-	
+
 	def self.get_latest_block(api_code = nil)
 		params = {}
 		if !api_code.nil? then params['api_code'] = api_code end
@@ -68,7 +115,7 @@ module Blockchain
 		response = Blockchain::call_api(resource, method: 'get', data: params)
 		return LatestBlock.new(JSON.parse(response))
 	end
-	
+
 	def self.get_inventory_data(hash, api_code = nil)
 		params = { 'format' => 'json' }
 		if !api_code.nil? then params['api_code'] = api_code end
@@ -82,7 +129,7 @@ module Blockchain
 		attr_reader :hash
 		attr_reader :time
 		attr_reader :main_chain
-		
+
 		def initialize(b)
 			@height = b['height']
 			@hash = b['hash']
@@ -97,7 +144,7 @@ module Blockchain
 		attr_reader :block_index
 		attr_reader :height
 		attr_reader :tx_indexes
-		
+
 		def initialize(b)
 			@hash = b['hash']
 			@time = b['time']
@@ -115,7 +162,7 @@ module Blockchain
 		attr_reader :value
 		attr_reader :value_hex
 		attr_reader :confirmations
-		
+
 		def initialize(o)
 			@tx_hash = o['tx_hash']
 			@tx_index = o['tx_index']
@@ -135,7 +182,7 @@ module Blockchain
 		attr_reader :total_sent
 		attr_reader :final_balance
 		attr_reader :transactions
-		
+
 		def initialize(a)
 			@hash160 = a['hash160']
 			@address = a['address']
@@ -146,6 +193,15 @@ module Blockchain
 			@transactions = a['txs'].map{ |tx| Transaction.new(tx) }
 		end
 	end
+
+    class MultiAddress
+        attr_reader :adresses
+        attr_reader :transactions
+
+        def initialize(ma)
+            @addresses = ma['addresses'].map{ |a| Address.new(a) }
+            @transactions = ma['txs'].map{ |tx| Transaction.net(tx) }
+
 
 	class Input
 		attr_reader :n
@@ -206,7 +262,7 @@ module Blockchain
 		attr_reader :size
 		attr_reader :inputs
 		attr_reader :outputs
-		
+
 		def initialize(t)
 			@double_spend = t.fetch('double_spend', false)
 			@block_height = t.fetch('block_height', false)
@@ -218,18 +274,18 @@ module Blockchain
 			@size = t['size']
 			@inputs = t['inputs'].map{ |i| Input.new(i) }
 			@outputs = t['out'].map{ |o| Output.new(o) }
-			
+
 			if @block_height.nil?
 				@block_height = -1
 			end
 		end
-		
+
 		def adjust_block_height(h)
 			@block_height = h
 		end
 	end
 
-		
+
 	class Block
 		attr_reader :hash
 		attr_reader :version
@@ -247,7 +303,7 @@ module Blockchain
 		attr_reader :received_time
 		attr_reader :relayed_by
 		attr_reader :transactions
-		
+
 		def initialize(b)
 			@hash = b['hash']
 			@version = b['ver']
@@ -268,7 +324,7 @@ module Blockchain
 			@transactions.each do |tx|
 				tx.adjust_block_height(@height)
 			end
-			
+
 			if @received_time.nil?
 				@received_time = @time
 			end
@@ -283,7 +339,7 @@ module Blockchain
 		attr_reader :nconnected
 		attr_reader :relayed_count
 		attr_reader :relayed_percent
-			
+
 		def initialize(i)
 			@hash = i['hash']
 			@type = i['type']
@@ -294,5 +350,11 @@ module Blockchain
 			@relayed_percent = i['relayed_percent'].to_i
 		end
 	end
-		
+
+    module FilterType
+        ALL = 4
+        CONFIRMED_ONLY = 5
+        REMOVE_UNSPENDABLE = 6
+    end
+
 end
