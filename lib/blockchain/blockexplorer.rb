@@ -79,8 +79,9 @@ module Blockchain
         return MultiAddress.news(JSON.parse(respones))
     end
 
-	def self.get_unspent_outputs(address, api_code = nil)
-		params = { 'active' => address }
+	def self.get_unspent_outputs(address_array, api_code = nil,
+                                limit = MAX_TRANSACTIONS_PER_REQUEST, confirmations = 0)
+		params = { 'active' => address_array.join("|"), 'limit' => limit, 'confirmations' => confirmations }
 		if !api_code.nil? then params['api_code'] = api_code end
 		resource = 'unspent'
 		response = Blockchain::call_api(resource, method: 'get', data: params)
@@ -114,14 +115,6 @@ module Blockchain
 		resource = 'latestblock'
 		response = Blockchain::call_api(resource, method: 'get', data: params)
 		return LatestBlock.new(JSON.parse(response))
-	end
-
-	def self.get_inventory_data(hash, api_code = nil)
-		params = { 'format' => 'json' }
-		if !api_code.nil? then params['api_code'] = api_code end
-		resource = "inv/#{hash}"
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return InventoryData.new(JSON.parse(response))
 	end
 
 	class SimpleBlock
@@ -201,7 +194,8 @@ module Blockchain
         def initialize(ma)
             @addresses = ma['addresses'].map{ |a| Address.new(a) }
             @transactions = ma['txs'].map{ |tx| Transaction.net(tx) }
-
+        end
+    end
 
 	class Input
 		attr_reader :n
@@ -328,26 +322,6 @@ module Blockchain
 			if @received_time.nil?
 				@received_time = @time
 			end
-		end
-	end
-
-	class InventoryData
-		attr_reader :hash
-		attr_reader :type
-		attr_reader :initial_time
-		attr_reader :initial_ip
-		attr_reader :nconnected
-		attr_reader :relayed_count
-		attr_reader :relayed_percent
-
-		def initialize(i)
-			@hash = i['hash']
-			@type = i['type']
-			@initial_time = i['initial_time'].to_i
-			@initial_ip = i['initial_ip']
-			@nconnected = i['nconnected'].to_i
-			@relayed_count = i['relayed_count'].to_i
-			@relayed_percent = i['relayed_percent'].to_i
 		end
 	end
 
