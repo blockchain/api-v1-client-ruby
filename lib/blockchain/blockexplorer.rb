@@ -5,126 +5,165 @@ module Blockchain
 
     MAX_TRANSACTIONS_PER_REQUEST = 50
 
-    # Deprecated. Please use get_block_by_hash whenever possible.
-	def self.get_block_by_index(block_index, api_code = nil)
-        warn "[DEPRECATION] `get_block_by_index` is deprecated. Please use `get_block_by_hash` whenever possible."
-		return self.get_block(block_index, api_code)
-	end
+    class BlockExplorer
 
-    def self.get_block_by_hash(block_hash, api_code = nil)
-        return self.get_block(block_hash, api_code)
+        attr_reader :client
+
+        def initialize(base_url = nil, api_code = nil)
+            @client = Client.new(base_url, api_code)
+        end
+
+        # Deprecated. Please use get_block_by_hash whenever possible.
+        def get_block_by_index(block_index)
+            warn "[DEPRECATED] `get_block_by_index` is deprecated. Please use `get_block_by_hash` whenever possible."
+            return get_block(block_index)
+        end
+
+        def get_block_by_hash(block_hash)
+            return get_block(block_hash)
+        end
+
+        private
+        def get_block(hash_or_index)
+            resource = 'rawblock/' + block_index
+            response = @client.call_api(resource, method: 'get', data: params)
+            return Block.new(JSON.parse(response))
+        end
+
+        # Deprecated. Please use get_tx_by_hash whenever possible.
+        def get_tx_by_index(tx_index)
+            warn "[DEPRECATED] `get_tx_by_index` is deprecated. Please use `get_tx_by_hash` whenever possible."
+            return get_tx(tx_index)
+        end
+
+        def get_tx_by_hash(tx_hash)
+            return get_tx(tx_hash)
+        end
+
+        private
+        def get_tx(hash_or_index)
+            resource = 'rawtx/' + hash_or_index
+            response = @client.call_api(resource, method: 'get', data: params)
+            return Transaction.new(JSON.parse(response))
+        end
+
+        def get_block_height(height)
+            params = { 'format' => 'json' }
+            resource = "block-height/#{height}"
+            response = @client.call_api(resource, method: 'get', data: params)
+            return JSON.parse(response)['blocks'].map{ |b| Block.new(b) }
+        end
+
+        def get_address_by_hash160(address, limit = MAX_TRANSACTIONS_PER_REQUEST,
+                                    offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
+            return get_address(address, limit, offset, filter)
+        end
+
+        def get_address_by_base58(address, limit = MAX_TRANSACTIONS_PER_REQUEST,
+                                    offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
+            return get_address(address, limit, offset, filter)
+        end
+
+        private
+        def get_address(address, limit = MAX_TRANSACTIONS_PER_REQUEST,
+                        offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
+            params = { 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+            resource = 'rawaddr/' + address
+            response = @client.call_api(resource, method: 'get', data: params)
+            return Address.new(JSON.parse(response))
+        end
+
+        def get_multi_address(address_array, limit = MAX_TRANSACTIONS_PER_REQUEST,
+                                offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
+            params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+            resource = 'multiaddr'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return MultiAddress.new(JSON.parse(respones))
+        end
+
+        def get_xpub(xpub, limit = MAX_TRANSACTIONS_PER_REQUEST,
+                    offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
+            params = { 'active' => xpub, 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+            resource = 'multiaddr'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return Xpub.new(JSON.parse(respones))
+        end
+
+        def get_unspent_outputs(address_array,
+                                limit = MAX_TRANSACTIONS_PER_REQUEST,
+                                confirmations = 0)
+            params = { 'active' => address_array.join("|"), 'limit' => limit, 'confirmations' => confirmations }
+            resource = 'unspent'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return JSON.parse(response)['unspent_outputs'].map{ |o| UnspentOutput.new(o) }
+        end
+
+        def get_unconfirmed_tx()
+            params = { 'format' => 'json' }
+            resource = 'unconfirmed-transactions'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return JSON.parse(response)['txs'].map{ |t| Transaction.new(t) }
+        end
+
+        def get_blocks(time: nil, pool_name: nil)
+            params = { 'format' => 'json' }
+            resource = "blocks/"
+            if !time.nil?
+                resource += time.to_s
+            elsif !pool_name.nil?
+                resource += pool_name
+            end
+            response = @client.call_api(resource, method: 'get', data: params)
+            return JSON.parse(response)['blocks'].map{ |b| SimpleBlock.new(b) }
+        end
+
+        def get_latest_block()
+            params = {}
+            resource = 'latestblock'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return LatestBlock.new(JSON.parse(response))
+        end
     end
 
-    def self.get_block(hash_or_index, api_code)
-        params = api_code.nil? ? { } : { 'api_code' => api_code }
-        resource = 'rawblock/' + block_index
-        response = Blockchain::call_api(resource, method: 'get', data: params)
-        return Block.new(JSON.parse(response))
+    private
+    def self.proxy(method_name, api_code, *args)
+        warn "[DEPRECATED] avoid use of static methods, use an instance of BlockExplorer class instead."
+        BlockExplorer.new(nil, api_code).send(method_name, *args)
     end
 
-    # Deprecated. Please use get_tx_by_hash whenever possible.
-    def self.get_tx_by_index(tx_index, api_code = nil)
-        warn "[DEPRECATION] `get_tx_by_index` is deprecated. Please use `get_tx_by_hash` whenever possible."
-        return self.get_tx(tx_index, api_code)
-    end
-
-    def self.get_tx_by_hash(tx_hash, api_code = nil)
-        return self.get_tx(tx_hash, api_code)
+    def self.get_block(hash_or_index, api_code = nil)
+        return self.proxy(__method__, api_code, hash_or_index)
     end
 
     def self.get_tx(hash_or_index, api_code = nil)
-        params = api_code.nil? ? { } : { 'api_code' => api_code }
-        resource = 'rawtx/' + hash_or_index
-        response = Blockchain::call_api(resource, method: 'get', data: params)
-        return Transaction.new(JSON.parse(response))
+        return self.proxy(__method__, api_code, hash_or_index)
     end
 
 	def self.get_block_height(height, api_code = nil)
-		params = { 'format' => 'json' }
-		if !api_code.nil? then params['api_code'] = api_code end
-		resource = "block-height/#{height}"
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return JSON.parse(response)['blocks'].map{ |b| Block.new(b) }
+		return self.proxy(__method__, api_code, height)
 	end
-
-    def self.get_address_by_hash160(address, api_code = nil,
-                                    limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
-                                    filter = FilterType::REMOVE_UNSPENDABLE)
-        return self.get_address(address, api_code, limit, offset, filter)
-    end
-
-    def self.get_address_by_base58(address, api_code = nil,
-                                    limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
-                                    filter = FilterType::REMOVE_UNSPENDABLE)
-        return self.get_address(address, api_code, limit, offset, filter)
-    end
 
     def self.get_address(address, api_code = nil,
                         limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
                         filter = FilterType::REMOVE_UNSPENDABLE)
-        params = { 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
-        if !api_code.nil? then params['api_code'] = api_code end
-        resource = 'rawaddr/' + address
-        response = Blockchain::call_api(resource, method: 'get', data: params)
-        return Address.new(JSON.parse(response))
-    end
-
-    def self.get_multi_address(address_array, api_code = nil,
-                                limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
-                                filter = FilterType::REMOVE_UNSPENDABLE)
-        params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
-        if !api_code.nil? then params['api_code'] = api_code end
-        resource = 'multiaddr'
-        response = Blockchain::call_api(resource, method: 'get', data: params)
-        return MultiAddress.new(JSON.parse(respones))
-    end
-
-    def self.get_xpub(xpub, api_code = nil,
-                        limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
-                        filter = FilterType::REMOVE_UNSPENDABLE)
-        params = { 'active' => xpub, 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
-        if !api_code.nil? then params['api_code'] = api_code end
-        resource = 'multiaddr'
-        response = Blockchain::call_api(resource, method: 'get', data: params)
-        return Xpub.new(JSON.parse(respones))
+        return self.proxy(__method__, api_code, address, limit, offset, filter)
     end
 
 	def self.get_unspent_outputs(address_array, api_code = nil,
                                 limit = MAX_TRANSACTIONS_PER_REQUEST, confirmations = 0)
-		params = { 'active' => address_array.join("|"), 'limit' => limit, 'confirmations' => confirmations }
-		if !api_code.nil? then params['api_code'] = api_code end
-		resource = 'unspent'
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return JSON.parse(response)['unspent_outputs'].map{ |o| UnspentOutput.new(o) }
+		return self.proxy(__method__, api_code, limit, confirmations)
 	end
 
 	def self.get_unconfirmed_tx(api_code = nil)
-		params = { 'format' => 'json' }
-		if !api_code.nil? then params['api_code'] = api_code end
-		resource = 'unconfirmed-transactions'
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return JSON.parse(response)['txs'].map{ |t| Transaction.new(t) }
+		return self.proxy(__method__, api_code)
 	end
 
 	def self.get_blocks(api_code = nil, time: nil, pool_name: nil)
-		params = { 'format' => 'json' }
-		if !api_code.nil? then params['api_code'] = api_code end
-		resource = "blocks/"
-		if !time.nil?
-			resource += time.to_s
-		elsif !pool_name.nil?
-			resource += pool_name
-		end
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return JSON.parse(response)['blocks'].map{ |b| SimpleBlock.new(b) }
+		return self.proxy(__method__, api_code, time, pool_name)
 	end
 
 	def self.get_latest_block(api_code = nil)
-		params = {}
-		if !api_code.nil? then params['api_code'] = api_code end
-		resource = 'latestblock'
-		response = Blockchain::call_api(resource, method: 'get', data: params)
-		return LatestBlock.new(JSON.parse(response))
+		return self.proxy(__method__, api_code)
 	end
 
 	class SimpleBlock
