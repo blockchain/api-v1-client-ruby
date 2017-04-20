@@ -132,38 +132,38 @@ module Blockchain
     end
 
     def self.get_block(hash_or_index, api_code = nil)
-        return self.proxy(__method__, api_code, hash_or_index)
+        self.proxy(__method__, api_code, hash_or_index)
     end
 
     def self.get_tx(hash_or_index, api_code = nil)
-        return self.proxy(__method__, api_code, hash_or_index)
+        self.proxy(__method__, api_code, hash_or_index)
     end
 
 	def self.get_block_height(height, api_code = nil)
-		return self.proxy(__method__, api_code, height)
+		self.proxy(__method__, api_code, height)
 	end
 
     def self.get_address(address, api_code = nil,
                         limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
                         filter = FilterType::REMOVE_UNSPENDABLE)
-        return self.proxy(__method__, api_code, address, limit, offset, filter)
+        self.proxy(__method__, api_code, address, limit, offset, filter)
     end
 
 	def self.get_unspent_outputs(address_array, api_code = nil,
                                 limit = MAX_TRANSACTIONS_PER_REQUEST, confirmations = 0)
-		return self.proxy(__method__, api_code, limit, confirmations)
+		self.proxy(__method__, api_code, limit, confirmations)
 	end
 
 	def self.get_unconfirmed_tx(api_code = nil)
-		return self.proxy(__method__, api_code)
+		self.proxy(__method__, api_code)
 	end
 
 	def self.get_blocks(api_code = nil, time: nil, pool_name: nil)
-		return self.proxy(__method__, api_code, time, pool_name)
+		self.proxy(__method__, api_code, time, pool_name)
 	end
 
 	def self.get_latest_block(api_code = nil)
-		return self.proxy(__method__, api_code)
+		self.proxy(__method__, api_code)
 	end
 
 	class SimpleBlock
