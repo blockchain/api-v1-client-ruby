@@ -242,7 +242,7 @@ module Blockchain
 
         def initialize(ma)
             @addresses = ma['addresses'].map{ |a| Address.new(a) }
-            @transactions = ma['txs'].map{ |tx| Transaction.net(tx) }
+            @transactions = ma['txs'].map{ |tx| Transaction.new(tx) }
         end
     end
 
