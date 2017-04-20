@@ -1,5 +1,5 @@
 require 'json'
-require_relative 'util'
+require_relative 'client'
 
 module Blockchain
 
@@ -391,5 +391,4 @@ module Blockchain
         CONFIRMED_ONLY = 5
         REMOVE_UNSPENDABLE = 6
     end
-
 end
