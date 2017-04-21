@@ -1,6 +1,6 @@
 # Block explorer functionality
 
-Initialize an instance of the block explorer class.
+Initialize an instance of the block explorer class:
 
 ```ruby
 require 'blockchain'
@@ -24,11 +24,11 @@ explorer = BlockExplorer.new('http://some-alternative-url', 'your-api-code')
 
 Get a single block based on a block index. Returns a `Block` object. (Deprecated)
 
-Params:
+##### Params:
 
 * `int block_index`
 
-Usage:
+##### Usage:
 ```ruby
 explorer.get_block_by_index(1486749)
 ```
@@ -37,11 +37,11 @@ explorer.get_block_by_index(1486749)
 
 Get a single block based on a block hash. Returns a `Block` object.
 
-Params:
+##### Params:
 
 * `str block_hash`
 
-Usage:
+##### Usage:
 ```ruby
 explorer.get_block_by_hash('000000000000000016f9a2c3e0f4c1245ff24856a79c34806969f5084f410680')
 ```
