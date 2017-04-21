@@ -9,8 +9,7 @@ require 'blockchian'
 explorer = ExchangeRateExplorer.new
 ```
 
-
-## Methods
+## Methods
 
 ### `get_ticker`
 Call the 'ticker' method and return a dictionary of `Currency` objects. Keys are currency codes (str) and values are `Currency` objects.
