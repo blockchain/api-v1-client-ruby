@@ -19,7 +19,57 @@ module Blockchain
 	end
 
 	module V2
-		class ReceiveResponse
+
+        class Receive
+
+            attr_reader :client
+
+            def initialize(base_url = nil)
+                base_url = base_url.nil? ? 'https://api.blockchain.info/v2/' : base_url
+                @client = Client.new(base_url)
+            end
+
+            def receive(xpub, callback, api_key, gap_limit = nil)
+                params = { 'xpub' => xpub, 'callback' => callback, 'key' => api_key }
+                if !gap_limit.nil? then params['gap_limit'] = gap_limit end
+                response = @client.call_api('receive', method: 'get', data: params)
+                return ReceiveResponse.new(JSON.parse(response))
+            end
+
+            def callback_log(callback, api_key = nil)
+                params = {'callback' => callback }
+                params['key'] = api_key unless api_key.nil?
+                response = @client.call_api('receive/callback_log', method: 'get', data: params)
+                json_resp = JSON.parse(response)
+                log_entries = json_resp.map do |entry|
+                    LogEntry.new(JSON.parse(entry))
+                end
+                return log_entries
+            end
+
+            def check_gap(xpub, api_key = nil)
+                params = {'xpub' => xpub}
+                params['key'] = api_key unless api_key.nil?
+                response = @client.call_api('receive/checkgap', method: 'get', data: params)
+                return JSON.parse(response)
+            end
+
+        end
+
+        def self.proxy(method_name, *args)
+            warn "[DEPRECATED] avoid use of static methods, use an instance of Receive class instead."
+            Receive.new.send(method_name, *args)
+        end
+
+		def self.receive(xpub, callback, api_key)
+            self.proxy(__method__, xpub, callback, api_key)
+		end
+
+		def self.callback_log(callback, api_key = nil)
+            self.proxy(__method__, callback, api_key)
+		end
+
+        class ReceiveResponse
 			attr_reader :address
 			attr_reader :index
 			attr_reader :callback_url
@@ -43,30 +93,6 @@ module Blockchain
 				@raw_response = raw_response
 				@response_code = response_code
 			end
-		end
-
-		def self.receive(xpub, callback, api_key)
-			params = { 'xpub' => xpub, 'callback' => callback, 'key' => api_key }
-			resp = Blockchain::call_api('v2/receive', method: 'get', data: params, base_url: 'https://api.blockchain.info/')
-			json_resp = JSON.parse(resp)
-			receive_response = ReceiveResponse.new(json_resp['address'],
-													json_resp['index'],
-													json_resp['callback'])
-			receive_response
-		end
-
-		def self.callback_log(callback, api_key = nil)
-			params = {'callback' => callback }
-			params['key'] = api_key unless api_key.nil?
-			resp = Blockchain::call_api('v2/receive/callback_log', method: 'get', data: params, base_url: 'https://api.blockchain.info/')
-			json_resp = JSON.parse(resp)
-			receive_response = json_resp.map do |entry|
-				LogEntry.new(entry['callback'],
-							entry['called_at'],
-							entry['raw_response'],
-							entry['response_code'])
-			end
-			receive_response
 		end
 	end
 
