@@ -1,21 +1,31 @@
-##Create Wallet functionality
+## Create Wallet functionality
 
-####`create_wallet`
-Create a new Blockchain.info wallet. It can be created containing a pre-generated private key or will otherwise generate a new private key. Returns a `CreateWalletResponse` instance.
+Initialize an instance of the `WalletCreator` class:
 
-Params: 
-```
-password : str - password for the new wallet. At least 10 characters.
-api_code : str - API code with the create wallets permission
-url : str - URL for an instance of service-my-wallet
-priv : str - private key to add to the wallet (optional, keyword)
-label : str - label for the first address in the wallet (optional, keyword)
-email : str - email to associate with the new wallet (optional, keyword)
-```
-
-Usage:
 ```ruby
 require 'blockchain'
 
-wallet = Blockchain::create_wallet('1234password', '58ck39ajuiw', 'http://localhost:3000/', label: 'Test wallet')
+# create an instance potining to http://127,0.0.1:3000/
+wallet_creator = WalletCreator.new(api_code = 'your-api-code')
+
+# create an instance pointing to an alternative base url
+wallet_creator = BlockExplorer.new('http://some-alternative-url', 'your-api-code')
+```
+
+## Methods
+
+### `create_wallet`
+Create a new Blockchain.info wallet. It can be created containing a pre-generated private key or will otherwise generate a new private key. Returns a `CreateWalletResponse` instance.
+
+##### Params:
+
+* `str password` - password for the new wallet. Min. 10 characters.
+* `str priv` (optional) - private key to add to the wallet.
+* `str label` (optional) - label for the first address in the wallet.
+* `str email` (optional) - email to associate with the new wallet.
+
+
+##### Usage:
+```ruby
+new_wallet = wallet_creator.create_wallet('1234password', label = 'Test wallet')
 ```

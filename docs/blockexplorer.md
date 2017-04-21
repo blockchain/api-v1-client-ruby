@@ -1,6 +1,6 @@
-# Block explorer functionality
+# Block Explorer functionality
 
-Initialize an instance of the block explorer class:
+Initialize an instance of the `BlockExplorer` class:
 
 ```ruby
 require 'blockchain'
@@ -9,7 +9,7 @@ require 'blockchain'
 explorer = BlockExplorer.new
 
 # create an instance potining to https://blockchain.info/ with an api code
-explorer = BlockExplorer.new(nil, 'your-api-code')
+explorer = BlockExplorer.new(api_code = 'your-api-code')
 
 # create an instance pointing to an alternative base url with no api code
 explorer = BlockExplorer.new('http://some-alternative-url')
@@ -81,7 +81,7 @@ explorer.get_block_height(2570)
 ```
 
 ---
-## Get Address
+### Get Address
 
 The implementations of these methods are currently interchangeable, but this is liable to change in the future. All address methods accept the following optional parameters:
 
