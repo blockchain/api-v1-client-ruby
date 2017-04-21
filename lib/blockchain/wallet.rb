@@ -1,16 +1,15 @@
 require 'json'
-require_relative 'util'
+require_relative 'client'
 
 module Blockchain
 
 	class Wallet
 
 		def initialize(identifier, password, url, second_password = nil, api_code = nil)
-			@identifier = identifier
+            @client = Client.new(url, api_code)
+            @identifier = identifier
 			@password = password
 			@second_password = second_password
-			@api_code = api_code
-			@url = url
 		end
 
 		def send(to, amount, from_address: nil, fee: nil)
@@ -21,6 +20,10 @@ module Blockchain
 		def send_many(recipients, from_address: nil, fee: nil)
 			params = build_basic_request()
 			method = ''
+
+            if recipients.nil? || recipients.size == 0
+                raise ArgumentError, 'Sending bitcoin from your wallet requires at least one receipient'
+            end
 
 			if recipients.size == 1
 				params['to'] = recipients.keys[0]
@@ -38,7 +41,7 @@ module Blockchain
 				params['fee'] = fee
 			end
 
-			response = Blockchain::call_api("merchant/#{@identifier}/#{method}", method: 'post', data: params, base_url: @url)
+			response = @client.call_api("merchant/#{@identifier}/#{method}", method: 'post', data: params)
 			json_response = parse_json(response)
 			return PaymentResponse.new(
 										json_response['message'],
@@ -47,14 +50,14 @@ module Blockchain
 		end
 
 		def get_balance()
-			response = resp = Blockchain::call_api("merchant/#{@identifier}/balance", method: 'get', data: build_basic_request(), base_url: @url)
+			response = resp = @client.call_api("merchant/#{@identifier}/balance", method: 'get', data: build_basic_request())
 			json_response = parse_json(response)
 			return json_response['balance']
 		end
 
 		def list_addresses()
 			params = build_basic_request()
-			response = Blockchain::call_api("merchant/#{@identifier}/list", method: 'get', data: params, base_url: @url)
+			response = @client.call_api("merchant/#{@identifier}/list", method: 'get', data: params)
 			json_response = parse_json(response)
 
 			addresses = []
@@ -68,11 +71,10 @@ module Blockchain
 			return addresses
 		end
 
-		def get_address(address, confirmations = 0)
+		def get_address(address)
 			params = build_basic_request()
 			params['address'] = address
-			params['confirmations'] = confirmations
-			response = Blockchain::call_api("merchant/#{@identifier}/address_balance", method: 'get', data: params, base_url: @url)
+			response = @client.call_api("merchant/#{@identifier}/address_balance", method: 'get', data: params)
 			json_response = parse_json(response)
 			return WalletAddress.new(json_response['balance'],
 									json_response['address'],
@@ -83,7 +85,7 @@ module Blockchain
 		def new_address(label = nil)
 			params = build_basic_request()
 			if !label.nil? then params['label'] = label end
-			response = Blockchain::call_api("merchant/#{@identifier}/new_address", method: 'post', data: params, base_url: @url)
+			response = @client.call_api("merchant/#{@identifier}/new_address", method: 'post', data: params)
 			json_response = parse_json(response)
 			return WalletAddress.new(0,
 									json_response['address'],
@@ -94,7 +96,7 @@ module Blockchain
 		def archive_address(address)
 			params = build_basic_request()
 			params['address'] = address
-			response = Blockchain::call_api("merchant/#{@identifier}/archive_address", method: 'post', data: params, base_url: @url)
+			response = @client.call_api("merchant/#{@identifier}/archive_address", method: 'post', data: params)
 			json_response = parse_json(response)
 			return json_response['archived']
 		end
@@ -102,7 +104,7 @@ module Blockchain
 		def unarchive_address(address)
 			params = build_basic_request()
 			params['address'] = address
-			response = Blockchain::call_api("merchant/#{@identifier}/unarchive_address", method: 'post', data: params, base_url: @url)
+			response = @client.call_api("merchant/#{@identifier}/unarchive_address", method: 'post', data: params)
 			json_response = parse_json(response)
 			return json_response['active']
 		end
@@ -111,9 +113,6 @@ module Blockchain
 			params = { 'password' => @password }
 			if !@second_password.nil?
 				params['second_password'] = @second_password
-			end
-			if !@api_code.nil?
-				params['api_code'] = @api_code
 			end
 			return params
 		end
