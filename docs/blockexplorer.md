@@ -25,7 +25,6 @@ explorer = BlockExplorer.new('http://some-alternative-url', 'your-api-code')
 Get a single block based on a block index. Returns a `Block` object. (Deprecated)
 
 ##### Params:
-
 * `int block_index`
 
 ##### Usage:
@@ -38,7 +37,6 @@ explorer.get_block_by_index(1486749)
 Get a single block based on a block hash. Returns a `Block` object.
 
 ##### Params:
-
 * `str block_hash`
 
 ##### Usage:
@@ -46,100 +44,143 @@ Get a single block based on a block hash. Returns a `Block` object.
 explorer.get_block_by_hash('000000000000000016f9a2c3e0f4c1245ff24856a79c34806969f5084f410680')
 ```
 
-####`get_tx`
-Get a single transaction based on a transaction index or hash. Returns a `Transaction` object.
+### `get_tx_by_index`
 
-Params:
-```
-tx_id : str - transaction index or hash
-```
+Get a single transaction based on a transaction index. Returns a `Transaction` object. (Deprecated)
 
-Usage:
+##### Params:
+* `int tx_index`
+
+##### Usage:
 ```ruby
-tx = Blockchain::get_tx('d4af240386cdacab4ca666d178afc88280b620ae308ae8d2585e9ab8fc664a94')
+explorer.get_tx_by_index(243169766)
 ```
 
-####`get_block_height`
+### `get_tx_by_hash`
+
+Get a single transaction based on a transaction hash. Returns a `Transaction` object.
+
+##### Params:
+* `str tx_hash`
+
+##### Usage:
+```ruby
+explorer.get_tx_by_hash('d4af240386cdacab4ca666d178afc88280b620ae308ae8d2585e9ab8fc664a94')
+```
+
+### `get_block_height`
+
 Get an array of blocks at the specified height. Returns an array of `Block` objects.
 
-Params:
-```
-height : int - block height
-```
+##### Params:
+* `int height`
 
-Usage:
+##### Usage:
 ```ruby
-blocks = Blockchain::get_block_height(2570)
+explorer.get_block_height(2570)
 ```
 
-####`get_address`
-Get a single address and its transactions. Returns an `Address` object.
+---
+## Get Address
 
-Params:
-```
-address : str - address in the base58 or hash160 format
-```
+The implementations of these methods are currently interchangeable, but this is liable to change in the future. All address methods accept the following optional parameters:
 
-Usage:
+* `int limit` - the number of transactions to limit the response to (max. 50, default 50)
+* `int offset` - skip the first n transactions (default 0)
+* `FilterType filter` - type of filter to use for the query (default FilterType::REMOVE_UNSPENDABLE)
+
+### `get_address_by_hash160`
+
+Get a single hash160 address and its transactions. Returns an `Address` object.
+
+##### Params:
+* `str address` - address in hash160 format
+
+##### Usage:
 ```ruby
-address = Blockchain::get_address('1HS9RLmKvJ7D1ZYgfPExJZQZA1DMU3DEVd')
+explorer.get_address_by_hash160('5ddda1c11ce7df6681cb064cf9aab5d6df44bb1b')
 ```
 
-####`get_unspent_outputs`
-Get an array of unspent outputs for an address. Returns an array of `UnspentOutput` objects.
+### `get_address_by_base58`
 
-Params:
-```
-address : str - address in the base58 or hash160 format
-```
+Get a single base58check address and its transactions. Returns an `Address` object.
 
-Usage:
+##### Params:
+* `str address` - address in base58check format
+
+##### Usage:
 ```ruby
-outs = Blockchain::get_unspent_outputs('1HS9RLmKvJ7D1ZYgfPExJZQZA1DMU3DEVd')
+explorer.get_address_by_base58('19ZKM6JFvCiBQbqqHPzRDLGHpN6wkQnXDs')
 ```
 
-####`get_latest_block`
+### `get_xpub`
+
+Get the xPub summary with its overall balanace and transactions. Returns a `Xpub` object.
+
+##### Params:
+* `str xpub` - xPub address
+
+##### Usage:
+```ruby
+explore.get_xpub('xpub6CmZamQcHw2TPtbGmJNEvRgfhLwitarvzFn3fBYEEkFTqztus7W7CNbf48Kxuj1bRRBmZPzQocB6qar9ay6buVkQk73ftKE1z4tt9cPHWRn')
+```
+
+### `get_multi_address`
+
+Get data for multiple base58check and / or xpub addresses. Returns a `MultiAddress` object.
+
+##### Params:
+* `str[] address_array`
+
+##### Usage:
+```ruby
+address_array = ['1C48NriBmPVvgCk1V5eNCS82zbSrKoPLbK', '1MyAwSkfdnTsV2uAsHiHMNcxqYhtWwNWSQ', '1Dn5EfV8bvfNu7HQ9iKr467nPFRiogKv9G']
+explorer.get_multi_address(address_array)
+```
+---
+
+### `get_unspent_outputs`
+
+Get an array of unspent outputs for one or more base58check or hash160 addresses. Returns an array of `UnspentOutput` objects.
+
+##### Params:
+* `str[] address_array`
+* `int limit` (optional) - the number of transactions to limit the response to (max. 50, default 50)
+* `int confirmations` (optional) - minimum number of confirmations to show (default 0)
+
+##### Usage:
+```ruby
+explorer.get_unspent_outputs(['1HS9RLmKvJ7D1ZYgfPExJZQZA1DMU3DEVd'])
+```
+
+### `get_latest_block`
 Get the latest block on the main chain. Returns a `LatestBlock` object.
 
-Usage:
+##### Usage:
 ```ruby
-latest_block = Blockchain::get_latest_block()
+explorer.get_latest_block()
 ```
 
-####`get_unconfirmed_tx`
+### `get_unconfirmed_tx`
 Get a list of currently unconfirmed transactions. Returns an array of `Transaction` objects.
 
-Usage:
+##### Usage:
 ```ruby
-txs = Blockchain::get_unconfirmed_tx()
+explorer.get_unconfirmed_tx()
 ```
 
-####`get_blocks`
+### `get_blocks`
 Get a list of blocks for a specific day or mining pool. Returns an array of `SimpleBlock` objects.
 
-Params:
-```
-time : int - unix time in ms (optional)
-pool_name : str - pool name (optional)
-```
+##### Params:
+* `int time` (optional) - unix time in ms
+* `str pool_name` (optional) - pool name (optional)
+
 At least one parameter is required.
 
-Usage:
+##### Usage:
 ```ruby
-blocks = Blockchain::get_blocks(pool_name = 'Discus Fish')
-```
-
-####`get_inventory_data`
-Get inventory data for recent blocks and addresses (up to 1 hour old). Returns an `InventoryData` object.
-
-Params:
-```
-hash : str - tx or block hash
-```
-
-Usage:
-```ruby
-inv = Blockchain::get_inventory_data('d4af240386cdacab4ca666d178afc88280b620ae308ae8d2585e9ab8fc664a94')
+blocks = explorer.get_blocks(pool_name = 'Discus Fish')
 ```
 
 Note regarding `Input` objects: if coinbase transaction, only `script` and `script_siq` will be populated.

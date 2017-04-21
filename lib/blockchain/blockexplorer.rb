@@ -73,20 +73,20 @@ module Blockchain
             return Address.new(JSON.parse(response))
         end
 
-        def get_multi_address(address_array, limit = MAX_TRANSACTIONS_PER_REQUEST,
-                                offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
-            params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
-            resource = 'multiaddr'
-            response = @client.call_api(resource, method: 'get', data: params)
-            return MultiAddress.new(JSON.parse(respones))
-        end
-
         def get_xpub(xpub, limit = MAX_TRANSACTIONS_PER_REQUEST,
                     offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
             params = { 'active' => xpub, 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
             resource = 'multiaddr'
             response = @client.call_api(resource, method: 'get', data: params)
             return Xpub.new(JSON.parse(respones))
+        end
+
+        def get_multi_address(address_array, limit = MAX_TRANSACTIONS_PER_REQUEST,
+                                offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
+            params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+            resource = 'multiaddr'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return MultiAddress.new(JSON.parse(respones))
         end
 
         def get_unspent_outputs(address_array,
@@ -96,6 +96,13 @@ module Blockchain
             resource = 'unspent'
             response = @client.call_api(resource, method: 'get', data: params)
             return JSON.parse(response)['unspent_outputs'].map{ |o| UnspentOutput.new(o) }
+        end
+
+        def get_latest_block()
+            params = {}
+            resource = 'latestblock'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return LatestBlock.new(JSON.parse(response))
         end
 
         def get_unconfirmed_tx()
@@ -115,13 +122,6 @@ module Blockchain
             end
             response = @client.call_api(resource, method: 'get', data: params)
             return JSON.parse(response)['blocks'].map{ |b| SimpleBlock.new(b) }
-        end
-
-        def get_latest_block()
-            params = {}
-            resource = 'latestblock'
-            response = @client.call_api(resource, method: 'get', data: params)
-            return LatestBlock.new(JSON.parse(response))
         end
     end
 
