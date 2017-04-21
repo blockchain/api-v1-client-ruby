@@ -16,7 +16,7 @@ module Blockchain
         # Deprecated. Please use get_block_by_hash whenever possible.
         def get_block_by_index(block_index)
             warn "[DEPRECATED] `get_block_by_index` is deprecated. Please use `get_block_by_hash` whenever possible."
-            return get_block(block_index)
+            return get_block(block_index.to_s)
         end
 
         def get_block_by_hash(block_hash)
@@ -33,7 +33,7 @@ module Blockchain
         # Deprecated. Please use get_tx_by_hash whenever possible.
         def get_tx_by_index(tx_index)
             warn "[DEPRECATED] `get_tx_by_index` is deprecated. Please use `get_tx_by_hash` whenever possible."
-            return get_tx(tx_index)
+            return get_tx(tx_index.to_s)
         end
 
         def get_tx_by_hash(tx_hash)

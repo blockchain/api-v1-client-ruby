@@ -1,20 +1,49 @@
-##Block explorer functionality
+# Block explorer functionality
 
-All functions support an optional parameter called `api_code`. It won't be listed with every function description.
+Initialize an instance of the block explorer class.
 
-####`get_block`
-Get a single block based on a block index or hash. Returns a `Block` object.
-
-Params: 
-```
-block_id : str - block index or hash
-```
-
-Usage:
 ```ruby
 require 'blockchain'
 
-block = Blockchain::get_block('000000000000000016f9a2c3e0f4c1245ff24856a79c34806969f5084f410680')
+# create an instance pointing to https://blockchain.info/ with no api code
+explorer = BlockExplorer.new
+
+# create an instance potining to https://blockchain.info/ with an api code
+explorer = BlockExplorer.new(nil, 'your-api-code')
+
+# create an instance pointing to an alternative base url with no api code
+explorer = BlockExplorer.new('http://some-alternative-url')
+
+# create an instance pointing to an alternative base url with an api code
+explorer = BlockExplorer.new('http://some-alternative-url', 'your-api-code')
+```
+
+## Methods
+
+### `get_block_by_index`
+
+Get a single block based on a block index. Returns a `Block` object. (Deprecated)
+
+Params:
+
+* `int block_index`
+
+Usage:
+```ruby
+explorer.get_block_by_index(1486749)
+```
+
+### `get_block_by_hash`
+
+Get a single block based on a block hash. Returns a `Block` object.
+
+Params:
+
+* `str block_hash`
+
+Usage:
+```ruby
+explorer.get_block_by_hash('000000000000000016f9a2c3e0f4c1245ff24856a79c34806969f5084f410680')
 ```
 
 ####`get_tx`
