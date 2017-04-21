@@ -1,8 +1,12 @@
-#Blockchain API library (Ruby, v1)
+# Blockchain API library (Ruby, v1)
 
 An official Ruby gem for interacting with the Blockchain.info API.
 
-###Getting started
+### Release notes
+
+This gem was recently updated to support additional functionality of the Blockchain API. As part of this process, the archticture was changed. Rather than calling static methods under the Blockchain module, applications can now create instances of different classes supporting different Blockchain API endpoints. Calling the static methods will still work, but these have been deprecated.
+
+### Getting started
 
 Installation via RubyGems:
 
@@ -31,11 +35,22 @@ The gem consists of the following functionality:
 
 The main module is called `Blockchain`
 
-###Error handling
+### The Client class
+
+Every class instance creates an instance of the client class, which is used to make calls to the API. The client instance will be created with a default base url if none is provided. You can also provide an API code when creating an instance of any class. For example:
+
+```ruby
+# creates a block explorer instance pointing to the default base url, https://blockchain.info/, with no api code
+explorer = BlockExplorer.new
+# creates a block explorer pointing to an alternative base url and using an api code
+explorer = BlockExplorer.new('http://some-other-url.com/', 'api-code')
+```
+
+### Error handling
 
 All functions may raise exceptions caused by incorrectly passed parameters or other problems. If a call is rejected server-side, the `APIException` exception will be raised.
 
-###Connection timeouts
+### Connection timeouts
 
 It is possible to set arbitrary connection timeouts.
 
@@ -44,7 +59,7 @@ require 'blockchain'
 Blockchain::TIMEOUT_SECONDS = 5 #time out after 5 seconds
 ```
 
-###Request limits and API keys
+### Request limits and API keys
 
 In order to prevent abuse some API methods require an API key approved with some basic contact information and a description of its intended use. Please request an API key [here](https://blockchain.info/api/api_create_code).
 
