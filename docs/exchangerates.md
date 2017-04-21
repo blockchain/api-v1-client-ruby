@@ -9,7 +9,7 @@ require 'blockchian'
 explorer = ExchangeRateExplorer.new
 ```
 
-## Methods
+##  Methods
 
 ### `get_ticker`
 Call the 'ticker' method and return a dictionary of `Currency` objects. Keys are currency codes (str) and values are `Currency` objects.
@@ -36,7 +36,7 @@ btc_amount = explorer.to_btc('USD', 4342.11)
 ```
 
 ### `from_btc`
-Convert c value in satoshi to the provided currency. Returns a `float`
+Convert x value in satoshi to the provided currency. Returns a `float`
 
 ##### Params:
 * `str currency` - currency code to convert to
