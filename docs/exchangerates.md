@@ -1,32 +1,43 @@
-##Exchange rates functionality
+# Exchange Rates functionality
 
-All functions support an optional parameter called `api_code`. It won't be listed with every function description.
+Initialize an instance of the `ExchangeRateExplorer` class:
 
-####`get_ticker`
-Call the 'ticker' method and return a dictionary of `Currency` objects. Keys are currency symbols (str) and values are `Currency` objects.
-
-
-Usage:
 ```ruby
-require 'blockchain'
+# as with other classes, you can set optional params base_url and / or api_code
 
-ticker = Blockchain::get_ticker()
+require 'blockchian'
+explorer = ExchangeRateExplorer.new
+```
+
+## Methods
+
+### `get_ticker`
+Call the 'ticker' method and return a dictionary of `Currency` objects. Keys are currency codes (str) and values are `Currency` objects.
+
+##### Usage:
+```ruby
+ticker = explorer.get_ticker
 #print the 15 min price for every currency
 ticker.keys.each do |key|
 	puts ticker[key].p15min
 end
 ```
 
-####`to_btc`
-Call the 'tobtc' method and convert x value in the provided currency to BTC. Returns a `float`.
+### `to_btc`
+Convert x value in the provided currency to BTC. Returns a `float`.
 
-Params:
-```
-ccy : str - currency code
-value : float
-```
+##### Params:
+* `str ccy` - currency code to convert from
+* `float value` - amount in selected currency
 
-Usage:
+##### Usage:
 ```ruby
-btc_amount = Blockchain::to_btc('USD', 4342.11)
+btc_amount = explorer.to_btc('USD', 4342.11)
 ```
+
+### `from_btc`
+Convert c value in satoshi to the provided currency. Returns a `float`
+
+##### Params:
+* `str currency` - currency code to convert to
+* `float satoshi_value` - amount of satoshi to convert

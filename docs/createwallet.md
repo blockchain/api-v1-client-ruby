@@ -1,4 +1,4 @@
-## Create Wallet functionality
+# Create Wallet functionality
 
 Initialize an instance of the `WalletCreator` class:
 
