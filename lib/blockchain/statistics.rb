@@ -27,6 +27,15 @@ module Blockchain
             return ChartResponse.new(JSON.parse(response))
         end
 
+        def get_pools(timespan = 4)
+            if timespan < 1 || timespan > 10
+                raise ArgumentError, 'timespan must be between 1 and 10'
+            end
+            params = { 'format' => 'json', 'timespan' => timespan.to_s + 'days' }
+            resource = 'pools'
+            response = @client.call_api(resource, method: 'get', data: params)
+            return JSON.parse(response)
+        end
     end
 
     private
@@ -110,5 +119,4 @@ module Blockchain
             @y = cv['y']
         end
     end
-
 end
