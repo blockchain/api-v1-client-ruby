@@ -176,7 +176,7 @@ Get a list of blocks for a specific day or mining pool. Returns an array of `Sim
 * `int time` (optional) - unix time in ms
 * `str pool_name` (optional) - pool name (optional)
 
-At least one parameter is required.
+Providing neither parameter will return all blocks mined today.
 
 ##### Usage:
 ```ruby

@@ -23,8 +23,6 @@ module Blockchain
             return get_block(block_hash)
         end
 
-
-
         # Deprecated. Please use get_tx_by_hash whenever possible.
         def get_tx_by_index(tx_index)
             warn "[DEPRECATED] `get_tx_by_index` is deprecated. Please use `get_tx_by_hash` whenever possible."
@@ -34,8 +32,6 @@ module Blockchain
         def get_tx_by_hash(tx_hash)
             return get_tx(tx_hash)
         end
-
-
 
         def get_block_height(height)
             params = { 'format' => 'json' }
@@ -53,8 +49,6 @@ module Blockchain
                                     offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
             return get_address(address, limit, offset, filter)
         end
-
-
 
         def get_xpub(xpub, limit = MAX_TRANSACTIONS_PER_REQUEST,
                     offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
