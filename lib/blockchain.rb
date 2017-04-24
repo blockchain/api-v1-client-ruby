@@ -6,6 +6,7 @@ require "blockchain/pushtx"
 require "blockchain/receive"
 require "blockchain/statistics"
 require "blockchain/wallet"
+require "blockchain/client"
 
 module Blockchain
 	module V2

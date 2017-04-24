@@ -23,11 +23,7 @@ module Blockchain
             return get_block(block_hash)
         end
 
-        def get_block(hash_or_index)
-            resource = 'rawblock/' + hash_or_index
-            response = @client.call_api(resource, method: 'get')
-            return Block.new(JSON.parse(response))
-        end
+
 
         # Deprecated. Please use get_tx_by_hash whenever possible.
         def get_tx_by_index(tx_index)
@@ -39,11 +35,7 @@ module Blockchain
             return get_tx(tx_hash)
         end
 
-        def get_tx(hash_or_index)
-            resource = 'rawtx/' + hash_or_index
-            response = @client.call_api(resource, method: 'get', data: params)
-            return Transaction.new(JSON.parse(response))
-        end
+
 
         def get_block_height(height)
             params = { 'format' => 'json' }
@@ -62,21 +54,14 @@ module Blockchain
             return get_address(address, limit, offset, filter)
         end
 
-        private
-        def get_address(address, limit = MAX_TRANSACTIONS_PER_REQUEST,
-                        offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
-            params = { 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
-            resource = 'rawaddr/' + address
-            response = @client.call_api(resource, method: 'get', data: params)
-            return Address.new(JSON.parse(response))
-        end
+
 
         def get_xpub(xpub, limit = MAX_TRANSACTIONS_PER_REQUEST,
                     offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
             params = { 'active' => xpub, 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
             resource = 'multiaddr'
             response = @client.call_api(resource, method: 'get', data: params)
-            return Xpub.new(JSON.parse(respones))
+            return Xpub.new(JSON.parse(response))
         end
 
         def get_multi_address(address_array, limit = MAX_TRANSACTIONS_PER_REQUEST,
@@ -84,7 +69,7 @@ module Blockchain
             params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
             resource = 'multiaddr'
             response = @client.call_api(resource, method: 'get', data: params)
-            return MultiAddress.new(JSON.parse(respones))
+            return MultiAddress.new(JSON.parse(response))
         end
 
         def get_unspent_outputs(address_array,
@@ -97,9 +82,8 @@ module Blockchain
         end
 
         def get_latest_block()
-            params = {}
             resource = 'latestblock'
-            response = @client.call_api(resource, method: 'get', data: params)
+            response = @client.call_api(resource, method: 'get')
             return LatestBlock.new(JSON.parse(response))
         end
 
@@ -110,7 +94,7 @@ module Blockchain
             return JSON.parse(response)['txs'].map{ |t| Transaction.new(t) }
         end
 
-        def get_blocks(time: nil, pool_name: nil)
+        def get_blocks(time = nil, pool_name = nil)
             params = { 'format' => 'json' }
             resource = "blocks/"
             if !time.nil?
@@ -120,6 +104,29 @@ module Blockchain
             end
             response = @client.call_api(resource, method: 'get', data: params)
             return JSON.parse(response)['blocks'].map{ |b| SimpleBlock.new(b) }
+        end
+
+        private
+        def get_block(hash_or_index)
+            resource = 'rawblock/' + hash_or_index
+            response = @client.call_api(resource, method: 'get')
+            return Block.new(JSON.parse(response))
+        end
+
+        private
+        def get_tx(hash_or_index)
+            resource = 'rawtx/' + hash_or_index
+            response = @client.call_api(resource, method: 'get')
+            return Transaction.new(JSON.parse(response))
+        end
+
+        private
+        def get_address(address, limit = MAX_TRANSACTIONS_PER_REQUEST,
+                        offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
+            params = { 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
+            resource = 'rawaddr/' + address
+            response = @client.call_api(resource, method: 'get', data: params)
+            return Address.new(JSON.parse(response))
         end
     end
 
@@ -224,18 +231,18 @@ module Blockchain
 		attr_reader :transactions
 
 		def initialize(a)
-			@hash160 = a['hash160']
+			@hash160 = a['hash160'] == nil ? nil : a['hash160']
 			@address = a['address']
 			@n_tx = a['n_tx']
 			@total_received = a['total_received']
 			@total_sent = a['total_sent']
 			@final_balance = a['final_balance']
-			@transactions = a['txs'].map{ |tx| Transaction.new(tx) }
+			@transactions = a['txs'] == nil ? nil : a['txs'].map{ |tx| Transaction.new(tx) }
 		end
 	end
 
     class MultiAddress
-        attr_reader :adresses
+        attr_reader :addresses
         attr_reader :transactions
 
         def initialize(ma)
