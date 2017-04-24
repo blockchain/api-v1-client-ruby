@@ -14,19 +14,18 @@ module Blockchain
         end
 
         # Deprecated. Please use get_block_by_hash whenever possible.
-        def get_block_by_index(block_index)
+        def get_block_by_index(index)
             warn "[DEPRECATED] `get_block_by_index` is deprecated. Please use `get_block_by_hash` whenever possible."
-            return get_block(block_index.to_s)
+            return get_block(index.to_s)
         end
 
         def get_block_by_hash(block_hash)
             return get_block(block_hash)
         end
 
-        private
         def get_block(hash_or_index)
-            resource = 'rawblock/' + block_index
-            response = @client.call_api(resource, method: 'get', data: params)
+            resource = 'rawblock/' + hash_or_index
+            response = @client.call_api(resource, method: 'get')
             return Block.new(JSON.parse(response))
         end
 
@@ -40,7 +39,6 @@ module Blockchain
             return get_tx(tx_hash)
         end
 
-        private
         def get_tx(hash_or_index)
             resource = 'rawtx/' + hash_or_index
             response = @client.call_api(resource, method: 'get', data: params)
