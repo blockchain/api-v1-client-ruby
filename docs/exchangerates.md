@@ -5,7 +5,7 @@ Initialize an instance of the `ExchangeRateExplorer` class:
 ```ruby
 # as with other classes, you can set optional params base_url and / or api_code
 
-require 'blockchian'
+require 'blockchain'
 explorer = ExchangeRateExplorer.new
 ```
 

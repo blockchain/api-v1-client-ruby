@@ -1,36 +1,47 @@
-##Receive V2 functionality
+# Receive Payments V2 functionality
 
-####`receive`
+Initialize an instance of the `Receive` class:
+
+```ruby
+# you can set optional params base_url (https://api.blockchain.info/v2/ by default).
+
+require 'blockchain'
+receive_payment = Receive.new
+```
+
+### `receive`
 Call the 'v2/receive' endpoint and create a new address. Returns a `V2::ReceiveResponse` object.
 
-Params:
-```
-xpub : str
-callback : str
-api_key : str
-```
+##### Params:
+* `str xpub`
+* `str callback`
+* `str api_key`
 
-Usage:
+##### Usage:
 ```ruby
-require 'blockchain'
-
-resp = Blockchain::V2::receive('xpub1hNapz1CuH4DhnV1DFHH7hafwDE8FJRheA', 'http://your.url.com', 'yourApiKey')
-
+resp = receive_payment.receive('xpub1hNapz1CuH4DhnV1DFHH7hafwDE8FJRheA', 'http://your.url.com', 'yourApiKey')
 ```
 
-####`callback_log`
-Call the 'v2/receive/callback_log' endpoint. Returns an array of `LogEntry` objects.
+### `callback_log`
+Call the 'v2/receive/callback_log' endpoint to see logs related to callback attempts. Returns an array of `LogEntry` objects.
 
-Params:
-```
-callback : str
-api_key : str
-```
+##### Params:
+* `str callback`
+* `str api_key`
 
-Usage:
+##### Usage:
 ```ruby
-require 'blockchain'
+resp = receive_payment.callback_log('http://your.url.com', 'yourApiKey')
+```
 
-resp = Blockchain::callback_log('1hNapz1CuH4DhnV1DFHH7hafwDE8FJRheA', 'http://your.url.com')
+### `callback_log`
+Call the 'v2/receive/checkgap' endpoint to check the index gap betweem the last address paid and the last address generated. Returns an `int`.
 
+##### Params:
+* `str xpub`
+* `str api_key`
+
+##### Usage:
+```ruby
+resp = receive_payment.callback_log('xpub1hNapz1CuH4DhnV1DFHH7hafwDE8FJRheA', 'yourApiKey')
 ```
