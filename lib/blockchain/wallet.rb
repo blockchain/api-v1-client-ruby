@@ -5,7 +5,7 @@ module Blockchain
 
 	class Wallet
 
-		def initialize(identifier, password, url, second_password = nil, api_code = nil)
+		def initialize(identifier, password, url = 'http://localhost:3000/', second_password = nil, api_code = nil)
             @client = Client.new(url, api_code)
             @identifier = identifier
 			@password = password

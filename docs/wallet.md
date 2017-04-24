@@ -1,54 +1,49 @@
-##`wallet` module
+# Wallet functionality
 
 An instance of the `Wallet` class needs to be initialized before it can be used.
 
-Constructor params:
-```
-identifier : str
-password : str
-url : str
-second_password : str (optional)
-api_code : str (optional)
-```
+##### Constructor params:
 
-Usage:
+* `str identifier`
+* `str password`
+* `str url` (optional, defaults to http://localhost:3000)
+* `str second_password` (optional)
+* `str api_code` (optional)
+
+##### Usage:
 ```ruby
 require 'blockchain'
 
-wallet = Blockchain::Wallet.new('ada4e4b6-3c9f-11e4-baad-164230d1df67', 'password123', 'http://localhost:3000/')
+wallet = Wallet.new('ada4e4b6-3c9f-11e4-baad-164230d1df67', 'password123')
 ```
 
-####`send`
+## Methods
+
+### `send`
 Send bitcoin from your wallet to a single address. Returns a `PaymentResponse` object.
 
-Params:
-```
-to : str - receiving address
-amount : int - amount to send (in satoshi)
-from_address : str - specific address to send from (optional, keyword)
-fee : int - transaction fee in satoshi. Must be greater than default (optional, keyword)
-note : str - public note to include with the transaction if amount >= 0.005 BTC (optional, keyword)
-```
+##### Params:
+* `str to` - receiving address
+* `int amount` - amount to send (in satoshi)
+* `str from_address` (optional, keyword) - specific address to send from
+* `int fee` (optional, keyword) - transaction fee in satoshi. Must be greater than default
 
-Usage:
+##### Usage:
 ```ruby
 payment = wallet.send('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob', 1000000, from_address: '1A8JiWcwvpY7tAopUkSnGuEYHmzGYfZPiq')
 
 puts payment.tx_hash
 ```
 
-####`send_many`
+### `send_many`
 Send bitcoin from your wallet to multiple addresses. Returns a `PaymentResponse` object.
 
-Params:
-```
-recipients : dictionary - dictionary with the structure of 'address':amount
-from_address : str - specific address to send from (optional, keyword)
-fee : int - transaction fee in satoshi. Must be greater than default (optional, keyword)
-note : str - public note to include with the transaction if amount >= 0.005 BTC (optional, keyword)
-```
+##### Params:
+* `dictionary recipients` - hash with the structure of `str address` => `int amount`
+* `str from_address` (optional, keyword) - specific address to send from
+* `int fee` (optional, keyword) - transaction fee in satoshi. Must be greater than default
 
-Usage:
+##### Usage:
 ```ruby
 recipients = { '1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob' => 1428300,
 				'1A8JiWcwvpY7tAopUkSnGuEYHmzGYfZPiq' => 234522117 }
@@ -57,23 +52,18 @@ payment = wallet.send_many(recipients)
 puts payment.tx_hash
 ```
 
-####`get_balance`
+### `get_balance`
 Fetch the wallet balance. Includes unconfirmed transactions and possibly double spends. Returns the wallet balance in satoshi.
 
-Usage:
+##### Usage:
 ```ruby
-puts wallet.get_balance() 
+puts wallet.get_balance()
 ```
 
-####`list_addresses`
+### `list_addresses`
 List all active addresses in the wallet. Returns an array of `Address` objects.
 
-Params:
-```
-confirmations : int - minimum number of confirmations transactions must have before being included in balance of addresses (optional)
-```
-
-Usage:
+##### Usage:
 ```ruby
 addresses = wallet.list_addresses()
 addresses.each do |a|
@@ -82,42 +72,36 @@ end
 
 ```
 
-####`get_address`
+### `get_address`
 Retrieve an address from the wallet. Returns an `Address` object.
 
-Params:
-```
-confirmations : int - minimum number of confirmations transactions must have before being included in the balance (optional)
-```
+##### Params:
+* `str address` - the address to retrieve
 
-Usage:
+##### Usage:
 ```ruby
-addr = wallet.get_address('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob', confirmations = 2)
+addr = wallet.get_address('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob')
 puts addr.balance
 ```
 
-####`new_address`
+### `new_address`
 Generate a new address and add it to the wallet. Returns an `Address` object.
 
-Params:
-```
-label : str - label to attach to the address (optional, keyword)
-```
+##### Params:
+* `str label` (optional, keyword) - label to attach to the address
 
-Usage:
+##### Usage:
 ```ruby
 newaddr = wallet.new_address('test_label')
 ```
 
-####`archive_address`
+### `archive_address`
 Archive an address. Returns a string representation of the archived address.
 
-Params:
-```
-address : str - address to archive
-```
+##### Params:
+* `str address` - address to archive
 
-Usage:
+##### Usage:
 ```ruby
 wallet.archive_address('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob')
 ```
@@ -125,25 +109,10 @@ wallet.archive_address('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob')
 ####`unarchive_address`
 Unarchive an address. Returns a string representation of the unarchived address.
 
-Params:
-```
-address : str - address to unarchive
-```
+##### Params:
+* `str address` - address to unarchive
 
-Usage:
+##### Usage:
 ```ruby
 wallet.unarchive_address('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob')
-```
-
-####`consolidate`
-Consolidate the wallet addresses. Returns a string array of consolidated addresses.
-
-Params:
-```
-days : int - addresses which have not received any transactions in at least this many days will be consolidated.
-```
-
-Usage:
-```ruby
-wallet.consolidate(50)
 ```
