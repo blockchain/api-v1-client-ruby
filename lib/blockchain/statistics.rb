@@ -18,10 +18,10 @@ module Blockchain
             return StatisticsResponse.new(JSON.parse(response))
         end
 
-        def get_chart(chart_type, timespan = nil)
+        def get_chart(chart_type, timespan = nil, rolling_average = nil)
             params = { 'format' => 'json' }
-            if !timespan.nil? then params['timespan'] = timespan
-            end
+            if !timespan.nil? then params['timespan'] = timespan end
+            if !rolling_average.nil? then params['rollingAverage'] = rolling_average end
             resource = 'charts/' + chart_type
             response = @client.call_api(resource, method: 'get', data: params)
             return ChartResponse.new(JSON.parse(response))
@@ -44,8 +44,8 @@ module Blockchain
         StatisticsExplorer.new(nil, api_code).send(method_name, *args)
     end
 
-	def self.get_statistics(api_code = nil)
-        self.proxy(__method__, api_code)
+	def self.get(api_code = nil)
+        self.proxy('get_statistics', api_code)
 	end
 
 	class StatisticsResponse
