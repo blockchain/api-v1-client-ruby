@@ -9,7 +9,8 @@ require 'blockchain'
 receive_payment = Receive.new
 ```
 
-## Methods
+
+## Methods
 
 ### `receive`
 Call the 'v2/receive' endpoint and create a new address. Returns a `V2::ReceiveResponse` object.
