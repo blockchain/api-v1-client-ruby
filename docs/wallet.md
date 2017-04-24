@@ -106,7 +106,7 @@ Archive an address. Returns a string representation of the archived address.
 wallet.archive_address('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob')
 ```
 
-####`unarchive_address`
+### `unarchive_address`
 Unarchive an address. Returns a string representation of the unarchived address.
 
 ##### Params:
