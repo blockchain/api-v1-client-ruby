@@ -27,7 +27,7 @@ end
 Convert x value in the provided currency to BTC. Returns a `float`.
 
 ##### Params:
-* `str ccy` - currency code to convert from
+* `str ccy` - code of the currency to convert from
 * `float value` - amount in selected currency
 
 ##### Usage:
@@ -39,5 +39,10 @@ btc_amount = explorer.to_btc('USD', 4342.11)
 Convert x value in satoshi to the provided currency. Returns a `float`
 
 ##### Params:
-* `str currency` - currency code to convert to
+* `str ccy` (optional) - code of the currency to convert to (default USD)
 * `float satoshi_value` - amount of satoshi to convert
+
+##### Usage:
+```ruby
+usd_amount = explorer.from_btc(100000000)
+```

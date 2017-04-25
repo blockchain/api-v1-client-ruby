@@ -34,8 +34,9 @@ module Blockchain
             return @client.call_api('tobtc', data: params).to_f
         end
 
-        def from_btc(ccy, satoshi_value)
-            params = { 'currency' => ccy, 'value' => satoshi_value}
+        def from_btc(ccy = nil, satoshi_value)
+            params = {'value' => satoshi_value}
+            if !ccy.nil? then params['currency'] = ccy end
             return @client.call_api('frombtc', data: params).to_f
         end
 
