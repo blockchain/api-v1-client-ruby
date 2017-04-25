@@ -5,8 +5,8 @@ Initialize an instance of the `StatisticsExplorer` class:
 ```ruby
 # as with other classes, you can set optional params base_url and / or api_code
 
-require 'blockchain'
-explorer = StatisticsExplorer.new
+require 'Blockchain'
+explorer = Blockchain::StatisticsExplorer.new
 ```
 
 ## Methods

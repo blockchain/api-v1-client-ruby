@@ -3,19 +3,19 @@
 Initialize an instance of the `BlockExplorer` class:
 
 ```ruby
-require 'blockchain'
+require 'Blockchain'
 
 # create an instance pointing to https://blockchain.info/ with no api code
-explorer = BlockExplorer.new
+explorer = Blockchain::BlockExplorer.new
 
 # create an instance potining to https://blockchain.info/ with an api code
-explorer = BlockExplorer.new(api_code = 'your-api-code')
+explorer = Blockchain::BlockExplorer.new(api_code = 'your-api-code')
 
 # create an instance pointing to an alternative base url with no api code
-explorer = BlockExplorer.new('http://some-alternative-url')
+explorer = Blockchain::BlockExplorer.new('http://some-alternative-url')
 
 # create an instance pointing to an alternative base url with an api code
-explorer = BlockExplorer.new('http://some-alternative-url', 'your-api-code')
+explorer = Blockchain::BlockExplorer.new('http://some-alternative-url', 'your-api-code')
 ```
 
 ## Methods

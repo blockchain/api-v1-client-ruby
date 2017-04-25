@@ -5,8 +5,8 @@ Initialize an instance of the `PushTx` class:
 ```ruby
 # as with other classes, you can set optional params base_url and / or api_code
 
-require 'blockchain'
-push_tx = PushTx.new
+require 'Blockchain'
+push_tx = Blockchain::PushTx.new
 ```
 
 ## Methods

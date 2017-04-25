@@ -12,9 +12,9 @@ An instance of the `Wallet` class needs to be initialized before it can be used.
 
 ##### Usage:
 ```ruby
-require 'blockchain'
+require 'Blockchain'
 
-wallet = Wallet.new('ada4e4b6-3c9f-11e4-baad-164230d1df67', 'password123')
+wallet = Blockchain::Wallet.new('ada4e4b6-3c9f-11e4-baad-164230d1df67', 'password123')
 ```
 
 ## Methods
