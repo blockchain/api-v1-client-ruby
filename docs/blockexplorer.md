@@ -85,7 +85,7 @@ explorer.get_block_height(2570)
 
 The implementations of these methods are currently interchangeable, but this is liable to change in the future. All address methods accept the following optional parameters:
 
-* `int limit` - the number of transactions to limit the response to (max. 50, default 50)
+* `int limit` - the number of transactions to limit the response to (max. 50, default 50 for a single address, max. 100, default 100 for multiple addresses)
 * `int offset` - skip the first n transactions (default 0)
 * `FilterType filter` - type of filter to use for the query (default FilterType::REMOVE_UNSPENDABLE)
 
@@ -145,7 +145,7 @@ Get an array of unspent outputs for one or more base58check or hash160 addresses
 
 ##### Params:
 * `str[] address_array`
-* `int limit` (optional) - the number of transactions to limit the response to (max. 50, default 50)
+* `int limit` (optional) - the number of transactions to limit the response to (max. 50, default 250)
 * `int confirmations` (optional) - minimum number of confirmations to show (default 0)
 
 ##### Usage:

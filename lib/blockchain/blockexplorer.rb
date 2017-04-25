@@ -4,6 +4,8 @@ require_relative 'client'
 module Blockchain
 
     MAX_TRANSACTIONS_PER_REQUEST = 50
+    MAX_TRANSACTIONS_PER_MULTI_REQUEST = 100
+    DEFAULT_UNSPENT_TRANSACTIONS_PER_REQUEST = 250
 
     class BlockExplorer
 
@@ -55,7 +57,7 @@ module Blockchain
             return get_address(address, limit, offset, filter)
         end
 
-        def get_xpub(xpub, limit = MAX_TRANSACTIONS_PER_REQUEST,
+        def get_xpub(xpub, limit = MAX_TRANSACTIONS_PER_MULTI_REQUEST,
                     offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
             params = { 'active' => xpub, 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
             resource = 'multiaddr'
@@ -63,7 +65,7 @@ module Blockchain
             return Xpub.new(JSON.parse(response))
         end
 
-        def get_multi_address(address_array, limit = MAX_TRANSACTIONS_PER_REQUEST,
+        def get_multi_address(address_array, limit = MAX_TRANSACTIONS_PER_MULTI_REQUEST,
                                 offset = 0, filter = FilterType::REMOVE_UNSPENDABLE)
             params = { 'active' => address_array.join("|"), 'format' => 'json', 'limit' => limit, 'offset' => offset, 'filter' => filter }
             resource = 'multiaddr'
@@ -72,7 +74,7 @@ module Blockchain
         end
 
         def get_unspent_outputs(address_array,
-                                limit = MAX_TRANSACTIONS_PER_REQUEST,
+                                limit = DEFAULT_UNSPENT_TRANSACTIONS_PER_REQUEST,
                                 confirmations = 0)
             params = { 'active' => address_array.join("|"), 'limit' => limit, 'confirmations' => confirmations }
             resource = 'unspent'
@@ -148,7 +150,7 @@ module Blockchain
     end
 
 	def self.get_unspent_outputs(address_array, api_code = nil,
-                                limit = MAX_TRANSACTIONS_PER_REQUEST, confirmations = 0)
+                                limit = DEFAULT_UNSPENT_TRANSACTIONS_PER_REQUEST, confirmations = 0)
 		Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__, limit, confirmations)
 	end
 
