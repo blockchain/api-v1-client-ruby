@@ -36,7 +36,7 @@ module Blockchain
 
 	def self.create_wallet(password, api_code, url, priv: nil, label: nil, email: nil)
         warn "[DEPRECATED] avoid use of static methods, use an instance of WalletCreator class instead."
-        WalletCreator.new(url, api_code).create_wallet(password, priv, label, email)
+        Blockchain::WalletCreator.new(url, api_code).create_wallet(password, priv, label, email)
 	end
 
 	class CreateWalletResponse

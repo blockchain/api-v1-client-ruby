@@ -13,6 +13,11 @@ module Blockchain
             @client = Client.new(base_url, api_code)
         end
 
+        def proxy(method_name, *args)
+            warn "[DEPRECATED] avoid use of static methods, use an instance of BlockExplorer class instead."
+            send(method_name, *args)
+        end
+
         # Deprecated. Please use get_block_by_hash whenever possible.
         def get_block_by_index(index)
             warn "[DEPRECATED] `get_block_by_index` is deprecated. Please use `get_block_by_hash` whenever possible."
@@ -124,45 +129,39 @@ module Blockchain
         end
     end
 
-    private
-    def self.proxy(method_name, api_code, *args)
-        warn "[DEPRECATED] avoid use of static methods, use an instance of BlockExplorer class instead."
-        BlockExplorer.new(nil, api_code).send(method_name, *args)
-    end
-
     def self.get_block(hash_or_index, api_code = nil)
-        self.proxy(__method__, api_code, hash_or_index)
+        Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__, hash_or_index)
     end
 
     def self.get_tx(hash_or_index, api_code = nil)
-        self.proxy(__method__, api_code, hash_or_index)
+        Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__, hash_or_index)
     end
 
 	def self.get_block_height(height, api_code = nil)
-		self.proxy(__method__, api_code, height)
+		Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__, height)
 	end
 
     def self.get_address(address, api_code = nil,
                         limit = MAX_TRANSACTIONS_PER_REQUEST, offset = 0,
                         filter = FilterType::REMOVE_UNSPENDABLE)
-        self.proxy(__method__, api_code, address, limit, offset, filter)
+        Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__, address, limit, offset, filter)
     end
 
 	def self.get_unspent_outputs(address_array, api_code = nil,
                                 limit = MAX_TRANSACTIONS_PER_REQUEST, confirmations = 0)
-		self.proxy(__method__, api_code, limit, confirmations)
+		Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__, limit, confirmations)
 	end
 
 	def self.get_unconfirmed_tx(api_code = nil)
-		self.proxy(__method__, api_code)
+		Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__)
 	end
 
 	def self.get_blocks(api_code = nil, time: nil, pool_name: nil)
-		self.proxy(__method__, api_code, time, pool_name)
+		Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__, time, pool_name)
 	end
 
 	def self.get_latest_block(api_code = nil)
-		self.proxy(__method__, api_code)
+		Blockchain::BlockExplorer.new(nil, api_code).proxy(__method__)
 	end
 
 	class SimpleBlock

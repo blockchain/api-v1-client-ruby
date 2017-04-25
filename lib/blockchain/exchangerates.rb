@@ -11,6 +11,11 @@ module Blockchain
             @client = Client.new(base_url, api_code)
         end
 
+        def proxy(method_name, *args)
+            warn "[DEPRECATED] avoid use of static methods, use an instance of ExchangeRateExplorer class instead."
+            send(method_name, *args)
+        end
+
         def get_ticker()
             params = {}
             response = @client.call_api('ticker', data: params)
@@ -42,18 +47,12 @@ module Blockchain
 
     end
 
-    private
-    def self.proxy(method_name, api_code, *args)
-        warn "[DEPRECATED] avoid use of static methods, use an instance of ExchangeRateExplorer class instead."
-        ExchangeRateExplorer.new(nil, api_code).send(method_name, *args)
-    end
-
 	def self.get_ticker(api_code = nil)
-        self.proxy(__method__, api_code)
+        Blockchain::ExchangeRateExplorer.new(nil, api_code).proxy(__method__)
 	end
 
 	def self.to_btc(ccy, value, api_code = nil)
-        self.proxy(__method__, api_code, ccy, value)
+        Blockchain::ExchangeRateExplorer.new(nil, api_code).proxy(__method__, ccy, value)
 	end
 
     class Currency

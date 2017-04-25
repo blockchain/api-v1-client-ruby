@@ -11,6 +11,11 @@ module Blockchain
             @client = Client.new(base_url, api_code)
         end
 
+        def proxy(method_name, *args)
+            warn "[DEPRECATED] avoid use of static methods, use an instance of StatisticsExplorer class instead."
+            send(method_name, *args)
+        end
+
         def get_statistics()
             params = { 'format' => 'json' }
             resource = 'stats'
@@ -38,14 +43,8 @@ module Blockchain
         end
     end
 
-    private
-    def self.proxy(method_name, api_code, *args)
-        warn "[DEPRECATED] avoid use of static methods, use an instance of StatisticsExplorer class instead."
-        StatisticsExplorer.new(nil, api_code).send(method_name, *args)
-    end
-
 	def self.get(api_code = nil)
-        self.proxy('get_statistics', api_code)
+        Blockchain::StatisticsExplorer.new(nil, api_code).proxy('get_statistics')
 	end
 
 	class StatisticsResponse

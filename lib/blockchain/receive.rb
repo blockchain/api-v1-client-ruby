@@ -29,6 +29,11 @@ module Blockchain
                 @client = Client.new(base_url)
             end
 
+            def proxy(method_name, *args)
+                warn "[DEPRECATED] avoid use of static methods, use an instance of Receive class instead."
+                send(method_name, *args)
+            end
+
             def receive(xpub, callback, api_key, gap_limit = nil)
                 params = { 'xpub' => xpub, 'callback' => callback, 'key' => api_key }
                 if !gap_limit.nil? then params['gap_limit'] = gap_limit end
@@ -56,17 +61,12 @@ module Blockchain
 
         end
 
-        def self.proxy(method_name, *args)
-            warn "[DEPRECATED] avoid use of static methods, use an instance of Receive class instead."
-            Receive.new.send(method_name, *args)
-        end
-
 		def self.receive(xpub, callback, api_key)
-            self.proxy(__method__, xpub, callback, api_key)
+            Blockchain::Receive.new.proxy(__method__, xpub, callback, api_key)
 		end
 
 		def self.callback_log(callback, api_key = nil)
-            self.proxy(__method__, callback, api_key)
+            Blockchain::Receive.new.proxy(__method__, callback, api_key)
 		end
 
         class ReceiveResponse
