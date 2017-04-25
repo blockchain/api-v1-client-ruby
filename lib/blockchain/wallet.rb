@@ -5,6 +5,8 @@ module Blockchain
 
 	class Wallet
 
+        attr_reader :client
+
 		def initialize(identifier, password, url = 'http://localhost:3000/', second_password = nil, api_code = nil)
             @client = Client.new(url, api_code)
             @identifier = identifier
@@ -50,7 +52,7 @@ module Blockchain
 		end
 
 		def get_balance()
-			response = resp = @client.call_api("merchant/#{@identifier}/balance", method: 'get', data: build_basic_request())
+			response = @client.call_api("merchant/#{@identifier}/balance", method: 'get', data: build_basic_request())
 			json_response = parse_json(response)
 			return json_response['balance']
 		end

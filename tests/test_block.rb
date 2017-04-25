@@ -1,5 +1,5 @@
 require 'blockchain'
-require_relative '../../lib/blockchain/blockexplorer'
+require_relative '../lib/blockchain/blockexplorer'
 require 'test/unit'
 
 class TestBlockExplorer < Test::Unit::TestCase

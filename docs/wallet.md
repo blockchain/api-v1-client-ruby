@@ -39,7 +39,7 @@ puts payment.tx_hash
 Send bitcoin from your wallet to multiple addresses. Returns a `PaymentResponse` object.
 
 ##### Params:
-* `dictionary recipients` - hash with the structure of `str address` => `int amount`
+* `dictionary recipients` - hash with the structure of `str address` => `int amount` in satoshi
 * `str from_address` (optional, keyword) - specific address to send from
 * `int fee` (optional, keyword) - transaction fee in satoshi. Must be greater than default
 
@@ -61,7 +61,7 @@ puts wallet.get_balance()
 ```
 
 ### `list_addresses`
-List all active addresses in the wallet. Returns an array of `Address` objects.
+List all active addresses in the wallet. Returns an array of `WalletAddress` objects.
 
 ##### Usage:
 ```ruby
@@ -73,7 +73,7 @@ end
 ```
 
 ### `get_address`
-Retrieve an address from the wallet. Returns an `Address` object.
+Retrieve an address from the wallet. Returns an `WalletAddress` object.
 
 ##### Params:
 * `str address` - the address to retrieve
@@ -85,7 +85,7 @@ puts addr.balance
 ```
 
 ### `new_address`
-Generate a new address and add it to the wallet. Returns an `Address` object.
+Generate a new address and add it to the wallet. Returns an `WalletAddress` object.
 
 ##### Params:
 * `str label` (optional, keyword) - label to attach to the address

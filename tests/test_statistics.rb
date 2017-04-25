@@ -1,5 +1,5 @@
 require 'Blockchain'
-require_relative '../../lib/blockchain/statistics'
+require_relative '../lib/blockchain/statistics'
 require 'test/unit'
 
 class TestStatistics < Test::Unit::TestCase
