@@ -1,6 +1,6 @@
 require 'json'
 
-require_relative 'util'
+require_relative 'client'
 
 module Blockchain
 

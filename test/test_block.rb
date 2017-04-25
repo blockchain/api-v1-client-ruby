@@ -5,7 +5,7 @@ require 'test/unit'
 class TestBlockExplorer < Test::Unit::TestCase
 
     def test_get_block_bad_hash_api_exception
-        assert_raise( Blockchain::APIException ) { Blockchain::BlockExplorer.new.get_block_by_hash("a") }
+        assert_raise( Blockchain::Client::APIException ) { Blockchain::BlockExplorer.new.get_block_by_hash("a") }
     end
 
     def test_get_block_correct_hash_no_exception
@@ -13,7 +13,7 @@ class TestBlockExplorer < Test::Unit::TestCase
     end
 
     def test_get_tx_bad_has_api_exception
-        assert_raise( Blockchain::APIException ) { Blockchain::BlockExplorer.new.get_tx_by_hash("a") }
+        assert_raise( Blockchain::Client::APIException ) { Blockchain::BlockExplorer.new.get_tx_by_hash("a") }
     end
 
     def test_get_tx_correct_hash_no_exception
@@ -29,7 +29,7 @@ class TestBlockExplorer < Test::Unit::TestCase
     end
 
     def test_get_address_by_hash160_bad_hash_api_exception
-        assert_raise Blockchain::APIException do Blockchain::BlockExplorer.new.get_address_by_hash160("buns") end
+        assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_address_by_hash160("buns") end
     end
 
     def test_get_address_by_hash160_correct_hash_no_exception
@@ -37,7 +37,7 @@ class TestBlockExplorer < Test::Unit::TestCase
     end
 
     def test_get_address_base58_bad_hash_api_exception
-        assert_raise Blockchain::APIException do Blockchain::BlockExplorer.new.get_address_by_base58("buns") end
+        assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_address_by_base58("buns") end
     end
 
     def test_get_address_base58_correct_hash_no_exception
@@ -45,7 +45,7 @@ class TestBlockExplorer < Test::Unit::TestCase
     end
 
     def test_get_xpub_bad_xpub_api_exception
-        assert_raise Blockchain::APIException do Blockchain::BlockExplorer.new.get_xpub('buns') end
+        assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_xpub('buns') end
     end
 
     def test_get_xpub_correct_xpub_no_exception
@@ -53,7 +53,7 @@ class TestBlockExplorer < Test::Unit::TestCase
     end
 
     def test_get_multi_address_bad_address_api_exception
-        assert_raise Blockchain::APIException do Blockchain::BlockExplorer.new.get_multi_address(['buns']) end
+        assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_multi_address(['buns']) end
     end
 
     def test_get_multi_address_correct_address_no_excpetion
@@ -62,7 +62,7 @@ class TestBlockExplorer < Test::Unit::TestCase
     end
 
     def test_get_unspent_outputs_bad_address_api_exception
-        assert_raise Blockchain::APIException do Blockchain::BlockExplorer.new.get_unspent_outputs(['buns']) end
+        assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_unspent_outputs(['buns']) end
     end
 
     def test_get_unspent_outputs_correct_address_no_excpetion
@@ -79,11 +79,11 @@ class TestBlockExplorer < Test::Unit::TestCase
     end
 
     def test_get_blocks_bad_time_api_exception
-        assert_raise Blockchain::APIException do Blockchain::BlockExplorer.new.get_blocks(time = -1) end
+        assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_blocks(time = -1) end
     end
 
     def test_get_blocks_bad_poolname_api_exception
-        assert_raise Blockchain::APIException do Blockchain::BlockExplorer.new.get_blocks(pool_name = 'wombat') end
+        assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_blocks(pool_name = 'wombat') end
     end
 
     def test_get_blocks_correct_params_no_exception

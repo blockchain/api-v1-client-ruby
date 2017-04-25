@@ -40,10 +40,12 @@ The main module is called `Blockchain`
 Every class instance creates an instance of the client class, which is used to make calls to the API. The client instance will be created with a default base url if none is provided. You can also provide an API code when creating an instance of any class. For example:
 
 ```ruby
+require 'Blockchain'
+
 # creates a block explorer instance pointing to the default base url, https://blockchain.info/, with no api code
-explorer = BlockExplorer.new
+explorer = Blockchain::BlockExplorer.new
 # creates a block explorer pointing to an alternative base url and using an api code
-explorer = BlockExplorer.new('http://some-other-url.com/', 'api-code')
+explorer = Blockchain::BlockExplorer.new('http://some-other-url.com/', 'api-code')
 ```
 
 ### Error handling
@@ -55,7 +57,7 @@ All functions may raise exceptions caused by incorrectly passed parameters or ot
 It is possible to set arbitrary connection timeouts.
 
 ```ruby
-require 'blockchain'
+require 'Blockchain'
 Blockchain::TIMEOUT_SECONDS = 5 #time out after 5 seconds
 ```
 

@@ -47,7 +47,7 @@ module Blockchain
             end
             response = http.request(request)
             if response.code != '200'
-                raise Blockchain::APIException, response.body
+                raise APIException, response.body
             end
             return response.body
 	    end

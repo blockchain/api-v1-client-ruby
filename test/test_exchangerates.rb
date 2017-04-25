@@ -1,5 +1,5 @@
 require 'Blockchain'
-require_relative '../../lib/blockchain/exchangerates'
+require_relative '../lib/blockchain/exchangerates'
 require 'test/unit'
 
 class TestExchangeRates < Test::Unit::TestCase
@@ -9,11 +9,11 @@ class TestExchangeRates < Test::Unit::TestCase
     end
 
     def test_to_btc_invalid_ccy_api_exception
-        assert_raise Blockchain::APIException do Blockchain::ExchangeRateExplorer.new.to_btc('mau', 300) end
+        assert_raise Blockchain::Client::APIException do Blockchain::ExchangeRateExplorer.new.to_btc('mau', 300) end
     end
 
     def test_to_btc_invalid_value_api_exception
-        assert_raise Blockchain::APIException do Blockchain::ExchangeRateExplorer.new.to_btc('USD', 'aaa') end
+        assert_raise Blockchain::Client::APIException do Blockchain::ExchangeRateExplorer.new.to_btc('USD', 'aaa') end
     end
 
     def test_to_btc_valid_args_no_exception
@@ -21,7 +21,7 @@ class TestExchangeRates < Test::Unit::TestCase
     end
 
     def test_from_btc_invalid_value_api_exception
-        assert_raise Blockchain::APIException do Blockchain::ExchangeRateExplorer.new.from_btc('GBP', 'cook') end
+        assert_raise Blockchain::Client::APIException do Blockchain::ExchangeRateExplorer.new.from_btc('GBP', 'cook') end
     end
 
     def test_from_btc_valid_args_no_exception

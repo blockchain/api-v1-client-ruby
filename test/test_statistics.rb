@@ -9,15 +9,15 @@ class TestStatistics < Test::Unit::TestCase
     end
 
     def test_get_chart_wrong_name_api_exception
-        assert_raise Blockchain::APIException do Blockchain::StatisticsExplorer.new.get_chart('bomba') end
+        assert_raise Blockchain::Client::APIException do Blockchain::StatisticsExplorer.new.get_chart('bomba') end
     end
 
     def test_get_chart_invalid_timespan_api_exception
-        assert_raise Blockchain::APIException do Blockchain::StatisticsExplorer.new.get_chart('transactions-per-second', 'dongledays') end
+        assert_raise Blockchain::Client::APIException do Blockchain::StatisticsExplorer.new.get_chart('transactions-per-second', 'dongledays') end
     end
 
     def test_get_chart_invalid_rolling_avg_api_exception
-        assert_raise Blockchain::APIException do Blockchain::StatisticsExplorer.new.get_chart('transactions-per-second', rolling_average = 'dongledays') end
+        assert_raise Blockchain::Client::APIException do Blockchain::StatisticsExplorer.new.get_chart('transactions-per-second', rolling_average = 'dongledays') end
     end
 
     def test_get_chart_valid_params_no_exception

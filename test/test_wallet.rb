@@ -16,13 +16,13 @@ class TestWallet < Test::Unit::TestCase
     end
 
     def test_get_address_invalid_address_api_exception
-        assert_raise Blockchain::APIException do puts Blockchain::Wallet.new('773d4edb-bffe-4790-8712-8d232ce04b0c', 'Password1!', 'http://localhost:3000/', 'Password2!').get_address('booboo').address end
+        assert_raise Blockchain::Client::APIException do puts Blockchain::Wallet.new('773d4edb-bffe-4790-8712-8d232ce04b0c', 'Password1!', 'http://localhost:3000/', 'Password2!').get_address('booboo').address end
     end
 
     def test_get_address_valid_address_no_exception
         wallet = Blockchain::Wallet.new('773d4edb-bffe-4790-8712-8d232ce04b0c', 'Password1!', 'http://localhost:3000/', 'Password2!')
         addr = wallet.list_addresses[1]
-        assert_nothing_raised Blockchain::APIException do wallet.get_address(addr.address) end
+        assert_nothing_raised Blockchain::Client::APIException do wallet.get_address(addr.address) end
     end
 
     def test_new_address_no_exception
