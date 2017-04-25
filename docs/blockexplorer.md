@@ -185,3 +185,104 @@ blocks = explorer.get_blocks(pool_name = 'Discus Fish')
 
 Note regarding `Input` objects: if coinbase transaction, only `script` and `script_siq` will be populated.
 
+## Response Object Properties
+
+A description of the objects returned by the methods in this class
+
+### SimpleBlock Object
+* `height`
+* `hash`
+* `time`
+* `main_chain`
+
+### LatestBlock Object
+* `hash`
+* `time`
+* `block_index`
+* `height`
+* `tx_indexes`
+
+### UnspentOutput Object
+* `tx_hash`
+* `tx_index`
+* `tx_output_n`
+* `script`
+* `value`
+* `value_hex`
+* `confirmations`
+
+### Address Object
+* `hash160`
+* `address`
+* `n_tx`
+* `total_received`
+* `total_sent`
+* `final_balance`
+* `transactions`
+
+### MultiAddress Object
+* `addresses`
+* `transactions`
+
+### Xpub Object
+* `address`
+* `n_tx`
+* `total_received`
+* `total_sent`
+* `final_balance`
+* `change_index`
+* `account_index`
+* `gap_limit`
+
+### Input Object
+* `n`
+* `value`
+* `address`
+* `tx_index`
+* `type`
+* `script`
+* `script_sig`
+* `sequence`
+
+### Output Object
+* `n`
+* `value`
+* `address`
+* `tx_index`
+* `script`
+* `spent`
+
+### Transaction Object
+* `double_spend`
+* `block_height`
+* `time`
+* `relayed_by`
+* `hash`
+* `tx_index`
+* `version`
+* `size`
+* `inputs`
+* `outputs`
+
+### Block Object
+* `hash`
+* `version`
+* `previous_block`
+* `merkle_root`
+* `time`
+* `bits`
+* `fee`
+* `nonce`
+* `n_tx`
+* `size`
+* `block_index`
+* `main_chain`
+* `height`
+* `received_time`
+* `relayed_by`
+* `transactions`
+
+### FilterType Enum
+* `ALL`
+* `CONFIRMED_ONLY`
+* `REMOVE_UNSPENDABLE`
