@@ -42,3 +42,38 @@ Get all mining pools and the total blocks they each mined in the last 4 days. Re
 ```ruby
 pool_stats = explorer.get_pools(8)
 ```
+
+## Response Object Properties
+
+### StatisticsResponse Object
+* `trade_volume_btc`
+* `miners_revenue_usd`
+* `btc_mined`
+* `trade_volume_usd`
+* `difficulty`
+* `minutes_between_blocks`
+* `number_of_transactions`
+* `hash_rate`
+* `timestamp`
+* `mined_blocks`
+* `blocks_size`
+* `total_fees_btc`
+* `total_btc_sent`
+* `estimated_btc_sent`
+* `total_btc`
+* `total_blocks`
+* `next_retarget`
+* `estimated_transaction_volume_usd`
+* `miners_revenue_btc`
+* `market_price_usd`
+
+### ChartResponse Object
+* `chart_name`
+* `unit`
+* `timespan`
+* `description`
+* `values`
+
+### ChartValue Object
+* `x`
+* `y`

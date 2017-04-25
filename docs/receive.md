@@ -48,3 +48,16 @@ Call the 'v2/receive/checkgap' endpoint to check the index gap betweem the last 
 ```ruby
 resp = receive_payment.callback_log('xpub1hNapz1CuH4DhnV1DFHH7hafwDE8FJRheA', 'yourApiKey')
 ```
+
+## Response Object Properties
+
+### ReceiveResponse Object
+* `address`
+* `index`
+* `callback_url`
+
+### LogEntry Object
+* `callback_url`
+* `called_at`
+* `raw_response`
+* `response_code`

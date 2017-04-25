@@ -29,3 +29,10 @@ Create a new Blockchain.info wallet. It can be created containing a pre-generate
 ```ruby
 new_wallet = wallet_creator.create_wallet('1234password', label = 'Test wallet')
 ```
+
+## Response Object Properties
+
+### CreateWalletResponse Object
+* `identifier`
+* `address`
+* `label`

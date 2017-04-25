@@ -116,3 +116,16 @@ Unarchive an address. Returns a string representation of the unarchived address.
 ```ruby
 wallet.unarchive_address('1NAF7GbdyRg3miHNrw2bGxrd63tfMEmJob')
 ```
+
+## Response Object Properties
+
+### WalletAddress Object
+* `balance`
+* `address`
+* `label`
+* `total_received`
+
+### PaymentResponse Object
+* `message`
+* `tx_hash`
+* `notice`

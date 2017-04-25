@@ -46,3 +46,12 @@ Convert x value in satoshi to the provided currency. Returns a `float`
 ```ruby
 usd_amount = explorer.from_btc(100000000)
 ```
+
+## Response Object Properties
+
+### Currency Object
+* `last`
+* `buy`
+* `sell`
+* `symbol`
+* `p15min`
