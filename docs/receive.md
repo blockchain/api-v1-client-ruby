@@ -3,10 +3,10 @@
 Initialize an instance of the `Receive` class:
 
 ```ruby
-# you can set optional params base_url (https://api.blockchain.info/v2/ by default).
+# you can set optional param base_url (https://api.blockchain.info/v2/ by default).
 
 require 'Blockchain'
-receive_payment = Blockchain::Receive.new
+receive_payment = Blockchain::V2::Receive.new
 ```
 
 

@@ -62,11 +62,11 @@ module Blockchain
         end
 
 		def self.receive(xpub, callback, api_key)
-            Blockchain::Receive.new.proxy(__method__, xpub, callback, api_key)
+            Blockchain::V2::Receive.new.proxy(__method__, xpub, callback, api_key)
 		end
 
 		def self.callback_log(callback, api_key = nil)
-            Blockchain::Receive.new.proxy(__method__, callback, api_key)
+            Blockchain::V2::Receive.new.proxy(__method__, callback, api_key)
 		end
 
         class ReceiveResponse

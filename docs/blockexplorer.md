@@ -86,7 +86,7 @@ explorer.get_block_height(2570)
 The implementations of these methods are currently interchangeable, but this is liable to change in the future. All address methods accept the following optional parameters:
 
 * `int limit` - the number of transactions to limit the response to (max. 50, default 50 for a single address, max. 100, default 100 for multiple addresses)
-* `int offset` - skip the first n transactions (default 0)
+* `int offset` - skip the first n transactions (default 0). This can be used to get more than the maximum number of transactions
 * `FilterType filter` - type of filter to use for the query (default FilterType::REMOVE_UNSPENDABLE)
 
 ### `get_address_by_hash160`
@@ -122,7 +122,7 @@ Get the xPub summary with its overall balanace and transactions. Returns a `Xpub
 
 ##### Usage:
 ```ruby
-explore.get_xpub('xpub6CmZamQcHw2TPtbGmJNEvRgfhLwitarvzFn3fBYEEkFTqztus7W7CNbf48Kxuj1bRRBmZPzQocB6qar9ay6buVkQk73ftKE1z4tt9cPHWRn')
+explorer.get_xpub('xpub6CmZamQcHw2TPtbGmJNEvRgfhLwitarvzFn3fBYEEkFTqztus7W7CNbf48Kxuj1bRRBmZPzQocB6qar9ay6buVkQk73ftKE1z4tt9cPHWRn')
 ```
 
 ### `get_multi_address`
@@ -145,7 +145,7 @@ Get an array of unspent outputs for one or more base58check or hash160 addresses
 
 ##### Params:
 * `str[] address_array`
-* `int limit` (optional) - the number of transactions to limit the response to (max. 50, default 250)
+* `int limit` (optional) - the number of transactions to limit the response to (max. 1000, default 250)
 * `int confirmations` (optional) - minimum number of confirmations to show (default 0)
 
 ##### Usage:
@@ -162,7 +162,7 @@ explorer.get_latest_block()
 ```
 
 ### `get_unconfirmed_tx`
-Get a list of currently unconfirmed transactions. Returns an array of `Transaction` objects.
+Get the last 10 unconfirmed transactions. Returns an array of `Transaction` objects.
 
 ##### Usage:
 ```ruby
@@ -174,7 +174,7 @@ Get a list of blocks for a specific day or mining pool. Returns an array of `Sim
 
 ##### Params:
 * `int time` (optional) - unix time in ms
-* `str pool_name` (optional) - pool name (optional)
+* `str pool_name` (optional) - pool name
 
 Providing neither parameter will return all blocks mined today.
 
