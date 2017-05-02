@@ -52,6 +52,10 @@ class TestBlockExplorer < Test::Unit::TestCase
         assert_nothing_raised do Blockchain::BlockExplorer.new.get_xpub("xpub6CmZamQcHw2TPtbGmJNEvRgfhLwitarvzFn3fBYEEkFTqztus7W7CNbf48Kxuj1bRRBmZPzQocB6qar9ay6buVkQk73ftKE1z4tt9cPHWRn") end
     end
 
+    def test_get_xpub_correct_xpub_not_nil
+        assert_not_nil Blockchain::BlockExplorer.new.get_xpub("xpub6CmZamQcHw2TPtbGmJNEvRgfhLwitarvzFn3fBYEEkFTqztus7W7CNbf48Kxuj1bRRBmZPzQocB6qar9ay6buVkQk73ftKE1z4tt9cPHWRn").address
+    end
+
     def test_get_multi_address_bad_address_api_exception
         assert_raise Blockchain::Client::APIException do Blockchain::BlockExplorer.new.get_multi_address(['buns']) end
     end

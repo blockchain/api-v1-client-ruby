@@ -252,9 +252,17 @@ module Blockchain
         attr_reader :gap_limit
 
         def initialize(x)
-            @change_index = x['change_index']
-            @account_index = x['account_index']
-            @gap_limit = x['gap_limit']
+            addr = x['addresses'][0]
+            @change_index = addr['change_index']
+            @account_index = addr['account_index']
+            @gap_limit = addr['gap_limit']
+            @hash160 = addr['hash160'] == nil ? nil : addr['hash160']
+            @address = addr['address']
+			@n_tx = addr['n_tx']
+			@total_received = addr['total_received']
+			@total_sent = addr['total_sent']
+			@final_balance = addr['final_balance']
+			@transactions = addr['txs'] == nil ? nil : addr['txs'].map{ |tx| Transaction.new(tx) }
         end
     end
 
