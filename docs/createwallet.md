@@ -5,7 +5,7 @@ Initialize an instance of the `WalletCreator` class:
 ```ruby
 require 'Blockchain'
 
-# create an instance potining to http://127,0.0.1:3000/
+# create an instance potining to http://127.0.0.1:3000/
 wallet_creator = Blockchain::WalletCreator.new(api_code = 'your-api-code')
 
 # create an instance pointing to an alternative base url
