@@ -12,11 +12,12 @@ module Blockchain
 
         def initialize(base_url = nil, api_code = nil)
             @base_url = base_url.nil? ? DEFAULT_BASE_URL : base_url
+						@base_url = "#{@base_url}/" if @base_url[-1] != '/'
             @api_code = api_code
         end
 
         class APIException < StandardError
-	    end
+		    end
 
         def call_api(resource, method: 'get', data: nil)
             url = URI.parse(@base_url + resource)
