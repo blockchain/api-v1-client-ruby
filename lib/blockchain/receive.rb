@@ -91,7 +91,7 @@ module Blockchain
 				@callback_url = r['callback_url']
 				@called_at = r['called_at']
 				@raw_response = r['raw_response']
-				@response_code = ['response_code']
+				@response_code = r['response_code']
 			end
 		end
 	end
