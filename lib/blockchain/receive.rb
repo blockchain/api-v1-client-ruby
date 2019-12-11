@@ -74,10 +74,10 @@ module Blockchain
 			attr_reader :index
 			attr_reader :callback_url
 
-			def initialize(r)
-				@address = r['address']
-				@index = r['index']
-				@callback_url = r['callback']
+			def initialize(address, index, callback)
+				@address = address
+				@index = index
+				@callback_url = callback
 			end
 		end
 
@@ -87,11 +87,11 @@ module Blockchain
 			attr_reader :raw_response
 			attr_reader :response_code
 
-			def initialize(r)
-				@callback_url = r['callback_url']
-				@called_at = r['called_at']
-				@raw_response = r['raw_response']
-				@response_code = ['response_code']
+			def initialize(callback_url, called_at, raw_response, response_code)
+				@callback_url = callback_url
+				@called_at = called_at
+				@raw_response = raw_response
+				@response_code = response_code
 			end
 		end
 	end
