@@ -50,7 +50,7 @@ module Blockchain
 		end
 		
 		def get_balance()
-			response = resp = Blockchain::call_api("merchant/#{@identifier}/balance", method: 'get', data: build_basic_request())
+			response = resp = Blockchain::call_api("merchant/#{@identifier}/balance", method: 'get', data: build_basic_request(), base_url: @url)
 			json_response = parse_json(response)
 			return json_response['balance']
 		end
@@ -58,7 +58,7 @@ module Blockchain
 		def list_addresses(confirmations = 0)
 			params = build_basic_request()
 			params['confirmations'] = confirmations
-			response = Blockchain::call_api("merchant/#{@identifier}/list", method: 'get', data: params)
+			response = Blockchain::call_api("merchant/#{@identifier}/list", method: 'get', data: params, base_url: @url)
 			json_response = parse_json(response)
 			
 			addresses = []
@@ -76,7 +76,7 @@ module Blockchain
 			params = build_basic_request()
 			params['address'] = address
 			params['confirmations'] = confirmations
-			response = Blockchain::call_api("merchant/#{@identifier}/address_balance", method: 'get', data: params)
+			response = Blockchain::call_api("merchant/#{@identifier}/address_balance", method: 'get', data: params, base_url: @url)
 			json_response = parse_json(response)
 			return WalletAddress.new(json_response['balance'],
 									json_response['address'],
@@ -87,7 +87,7 @@ module Blockchain
 		def new_address(label = nil)
 			params = build_basic_request()
 			if !label.nil? then params['label'] = label end
-			response = Blockchain::call_api("merchant/#{@identifier}/new_address", method: 'post', data: params)
+			response = Blockchain::call_api("merchant/#{@identifier}/new_address", method: 'post', data: params, base_url: @url)
 			json_response = parse_json(response)
 			return WalletAddress.new(0,
 									json_response['address'],
@@ -98,7 +98,7 @@ module Blockchain
 		def archive_address(address)
 			params = build_basic_request()
 			params['address'] = address
-			response = Blockchain::call_api("merchant/#{@identifier}/archive_address", method: 'post', data: params)
+			response = Blockchain::call_api("merchant/#{@identifier}/archive_address", method: 'post', data: params, base_url: @url)
 			json_response = parse_json(response)
 			return json_response['archived']
 		end
@@ -106,7 +106,7 @@ module Blockchain
 		def unarchive_address(address)
 			params = build_basic_request()
 			params['address'] = address
-			response = Blockchain::call_api("merchant/#{@identifier}/unarchive_address", method: 'post', data: params)
+			response = Blockchain::call_api("merchant/#{@identifier}/unarchive_address", method: 'post', data: params, base_url: @url)
 			json_response = parse_json(response)
 			return json_response['active']
 		end
